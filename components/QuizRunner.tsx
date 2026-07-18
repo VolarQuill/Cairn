@@ -28,6 +28,7 @@ export function QuizRunner({
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<Record<number, number>>({});
+  const [current, setCurrent] = useState(0);
   const [results, setResults] = useState<any>(null);
   const [err, setErr] = useState("");
 
@@ -36,6 +37,7 @@ export function QuizRunner({
     setErr("");
     setResults(null);
     setSelected({});
+    setCurrent(0);
     try {
       const res = await fetch("/api/quiz", {
         method: "POST",
@@ -84,6 +86,10 @@ export function QuizRunner({
   }
 
   const answeredCount = Object.keys(selected).length;
+  const total = questions.length;
+  const allAnswered = answeredCount >= total;
+  const q = questions[current];
+  const pct = total ? Math.round(((current + 1) / total) * 100) : 0;
 
   return (
     <div>
@@ -118,43 +124,105 @@ export function QuizRunner({
         </div>
       )}
 
-      {!loading && questions.length > 0 && !results && (
-        <div className="mt-5 space-y-5">
-          <h2 className="text-xl">{title}</h2>
-          {questions.map((q, qi) => (
-            <div key={q.id ?? qi} className="card p-5">
-              <p className="font-medium">
-                {qi + 1}. {q.prompt}
-              </p>
-              <div className="mt-3 grid gap-2">
-                {(q.options ?? []).map((opt, oi) => {
-                  const isSel = selected[qi] === oi;
-                  return (
-                    <button
-                      key={oi}
-                      onClick={() => setSelected((s) => ({ ...s, [qi]: oi }))}
-                      className={`rounded-xl border px-4 py-2.5 text-left text-sm transition ${
+      {!loading && questions.length > 0 && !results && q && (
+        <div className="mt-5">
+          {/* Progress */}
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm font-medium text-bark-100 dark:text-cream-200">
+              {title}
+            </span>
+            <span className="text-sm text-bark-50 dark:text-cream-300">
+              {current + 1} / {total}
+            </span>
+          </div>
+          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-cream-200 dark:bg-forest-200/50">
+            <div
+              className="h-full rounded-full bg-amber-100 transition-all duration-300"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {questions.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                aria-label={`Go to question ${i + 1}`}
+                className={`h-2.5 rounded-full transition-all ${
+                  i === current
+                    ? "w-6 bg-amber-100"
+                    : selected[i] !== undefined
+                    ? "w-2.5 bg-moss-100 dark:bg-moss-50"
+                    : "w-2.5 bg-cream-300 dark:bg-forest-200/50"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Big flashcard */}
+          <div className="card mt-5 flex min-h-[300px] flex-col justify-center p-6 text-center sm:p-9">
+            <p className="font-display text-lg leading-snug text-bark-200 dark:text-cream-100">
+              {q.prompt}
+            </p>
+            <div className="mx-auto mt-6 grid w-full max-w-2xl gap-3 text-left">
+              {(q.options ?? []).map((opt, oi) => {
+                const isSel = selected[current] === oi;
+                const letter = String.fromCharCode(65 + oi);
+                return (
+                  <button
+                    key={oi}
+                    onClick={() =>
+                      setSelected((s) => ({ ...s, [current]: oi }))
+                    }
+                    className={`flex items-center gap-3 rounded-2xl border px-4 py-4 text-left text-lg transition ${
+                      isSel
+                        ? "border-amber-100 bg-amber-50/25 font-semibold shadow-glow"
+                        : "border-cream-300 hover:border-amber-100/60 hover:bg-cream-200/40 dark:border-forest-200/40 dark:hover:bg-forest-200/40"
+                    }`}
+                  >
+                    <span
+                      className={`inline-flex h-8 w-8 flex-none items-center justify-center rounded-full border text-sm font-bold ${
                         isSel
-                          ? "border-amber-100 bg-amber-50/25 font-semibold"
-                          : "border-cream-300 hover:border-amber-100/60 dark:border-forest-200/40"
+                          ? "border-amber-100 bg-amber-100 text-bark-300"
+                          : "border-cream-300 text-bark-50 dark:border-forest-200/50 dark:text-cream-300"
                       }`}
                     >
-                      {String.fromCharCode(65 + oi)}. {opt}
-                    </button>
-                  );
-                })}
-              </div>
+                      {letter}
+                    </span>
+                    <span className="flex-1">{opt}</span>
+                  </button>
+                );
+              })}
             </div>
-          ))}
-          <button
-            onClick={submit}
-            className="btn-primary w-full py-3"
-            disabled={answeredCount < questions.length}
-          >
-            {answeredCount < questions.length
-              ? `Answer all questions (${answeredCount}/${questions.length})`
-              : "Submit answers"}
-          </button>
+          </div>
+
+          {/* Navigation */}
+          <div className="mt-5 flex items-center justify-between gap-3">
+            <button
+              onClick={() => setCurrent((c) => Math.max(0, c - 1))}
+              disabled={current === 0}
+              className="btn-ghost"
+            >
+              <Icon name="arrow-left" className="inline h-4 w-4 align-middle" /> Back
+            </button>
+
+            {allAnswered ? (
+              <button onClick={submit} className="btn-primary px-6 py-3">
+                Submit answers <Icon name="check" className="inline h-4 w-4 align-middle" />
+              </button>
+            ) : current < total - 1 ? (
+              <button
+                onClick={() => setCurrent((c) => Math.min(total - 1, c + 1))}
+                disabled={selected[current] === undefined}
+                className="btn-primary px-6"
+              >
+                Next <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
+              </button>
+            ) : (
+              <button disabled className="btn-primary px-6 opacity-60">
+                Answer all ({answeredCount}/{total})
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -202,7 +270,7 @@ export function QuizRunner({
                       : "border-l-terracotta-100"
                   }`}
                 >
-                  <p className="font-medium">
+                  <p className="text-lg font-medium">
                     {qi + 1}. {q.prompt}
                   </p>
                   <div className="mt-2 space-y-1 text-sm">

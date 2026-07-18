@@ -1,5 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { env } from "@/lib/util";
+import {
+  resolvedProvider,
+  resolvedApiKey,
+  resolvedModel,
+  type AiProvider,
+} from "@/lib/settings";
 
 /**
  * AI provider wrapper.
@@ -8,47 +14,46 @@ import { env } from "@/lib/util";
  * model. The active provider is chosen purely by which secret is configured:
  *   - GEMINI_API_KEY    -> Google Gemini (OpenAI-compatible endpoint)
  *   - ANTHROPIC_API_KEY -> Anthropic Claude
+ *   - a user-supplied key from Settings (see lib/settings) also counts
  *   - neither           -> fully offline heuristic fallback (product still works)
  *
- * The model id is configurable via CAIRN_MODEL / GEMINI_MODEL and falls back to
- * a sensible per-provider default. No specific model is baked into the platform.
+ * The model id is configurable via CAIRN_MODEL / GEMINI_MODEL (or a key the
+ * user sets in Settings) and falls back to a sensible per-provider default. No
+ * specific model is baked into the platform.
  */
 
 const GEMINI_OPENAI_BASE =
   "https://generativelanguage.googleapis.com/v1beta/openai";
 
-export type AiProvider = "gemini" | "anthropic";
+export type { AiProvider };
 
-/** Which provider is active, based on configured environment secrets. */
+/** Which provider is active, based on configured environment secrets or the
+ *  key a user pasted in Settings. */
 export function activeProvider(): AiProvider | null {
-  if (env("GEMINI_API_KEY")) return "gemini";
-  if (env("ANTHROPIC_API_KEY")) return "anthropic";
-  return null;
+  return resolvedProvider();
 }
 
 export function hasApiKey(): boolean {
-  return activeProvider() !== null;
+  return resolvedProvider() !== null;
 }
 
 /** Resolve the model id. Never hard-codes a specific vendor's model. */
-export const MODEL: string = (() => {
-  const explicit = env("CAIRN_MODEL") || env("GEMINI_MODEL");
-  if (explicit) return explicit;
-  // Sensible default per provider — always overridable by the deployer.
-  return activeProvider() === "gemini"
-    ? "gemini-1.5-flash"
-    : "claude-3-5-sonnet-20241022";
-})();
+export function MODEL(): string {
+  return resolvedModel();
+}
 
 let _anthropic: Anthropic | null = null;
+let _anthropicKey = "";
 function anthropic(): Anthropic {
-  if (_anthropic) return _anthropic;
+  const key = resolvedApiKey();
+  if (_anthropic && _anthropicKey === key) return _anthropic;
   const opts: ConstructorParameters<typeof Anthropic>[0] = {
-    apiKey: env("ANTHROPIC_API_KEY", "missing"),
+    apiKey: key || "missing",
   };
   const base = env("ANTHROPIC_BASE_URL");
   if (base) (opts as any).baseURL = base;
   _anthropic = new Anthropic(opts);
+  _anthropicKey = key;
   return _anthropic;
 }
 
@@ -73,7 +78,7 @@ export async function complete(
   if (!provider) {
     if (opts.requireModel || !offline) {
       throw new Error(
-        "No AI provider is configured. Set GEMINI_API_KEY or ANTHROPIC_API_KEY to enable AI generation."
+        "No AI provider is configured. Set GEMINI_API_KEY or ANTHROPIC_API_KEY, or add your own key in Settings, to enable AI generation."
       );
     }
     return { text: offline(), source: "offline" };
@@ -95,7 +100,7 @@ export async function complete(
 
 async function anthropicComplete(opts: CompleteOptions): Promise<string> {
   const msg = await anthropic().messages.create({
-    model: MODEL,
+    model: MODEL(),
     max_tokens: opts.maxTokens ?? 2048,
     temperature: opts.temperature ?? 0.6,
     system: opts.system,
@@ -119,10 +124,10 @@ async function geminiComplete(opts: CompleteOptions): Promise<string> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${env("GEMINI_API_KEY")}`,
+      Authorization: `Bearer ${resolvedApiKey()}`,
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: MODEL(),
       max_tokens: opts.maxTokens ?? 2048,
       temperature: opts.temperature ?? 0.6,
       messages: [

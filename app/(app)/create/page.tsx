@@ -10,7 +10,7 @@ const TYPES: { id: SourceType; label: string; icon: IconName; hint: string }[] =
   { id: "text", label: "Paste text", icon: "note", hint: "Notes, an excerpt, anything" },
   { id: "topic", label: "A topic", icon: "bulb", hint: "Cairn writes it from scratch" },
   { id: "url", label: "A link", icon: "link", hint: "Article or page URL" },
-  { id: "file", label: "Upload", icon: "file", hint: "Markdown / text / CSV" },
+  { id: "file", label: "Upload", icon: "file", hint: "PDF, Word, PowerPoint, Excel & more" },
 ];
 
 const SAMPLE = `Spaced repetition is a learning technique that incorporates increasing intervals of time between subsequent reviews of previously learned material. The idea is that each time you successfully recall something, the memory is strengthened and the next review can be spaced further out. This combats the forgetting curve described by Hermann Ebbinghaus, which shows how memories fade rapidly without reinforcement. Tools like flashcards schedule reviews using algorithms such as SM-2, which adjust intervals based on how easily you remembered each item.`;
@@ -24,13 +24,30 @@ export default function CreatePage() {
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
+  const [extracting, setExtracting] = useState(false);
 
-  function onFile(f: File | undefined) {
+  async function onFile(f: File | undefined) {
     if (!f) return;
-    const reader = new FileReader();
-    reader.onload = () => setText(String(reader.result ?? ""));
-    reader.onerror = () => setError("Could not read that file. Try pasting the text instead.");
-    reader.readAsText(f);
+    setError("");
+    setExtracting(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", f);
+      const res = await fetch("/api/extract", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not read that file.");
+      const text = data.text || "";
+      setText(text);
+      if (text.trim().length < 20) {
+        setError(
+          "We couldn’t pull much text from that file. You can paste its contents here instead."
+        );
+      }
+    } catch (e: any) {
+      setError(e.message || "Could not read that file. Try pasting the text instead.");
+    } finally {
+      setExtracting(false);
+    }
   }
 
   async function submit(e: React.FormEvent) {
@@ -106,9 +123,10 @@ export default function CreatePage() {
             <div className="space-y-2">
               <input
                 type="file"
-                accept=".txt,.md,.markdown,.csv,.json,text/*"
+                accept=".txt,.text,.md,.markdown,.mdx,.csv,.tsv,.json,.xml,.html,.htm,.yml,.yaml,.log,.tex,.rtf,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.ods,.ots,.odt,.ott,.odp,.otp,.pages,.key,application/pdf,application/msword,application/vnd.ms-powerpoint,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.*,application/vnd.oasis.opendocument.*,text/*"
                 onChange={(e) => onFile(e.target.files?.[0])}
                 className="input"
+                disabled={extracting}
               />
               <textarea
                 id="src"
@@ -179,13 +197,19 @@ export default function CreatePage() {
           </div>
         )}
 
-        <button type="submit" className="btn-amber w-full py-3" disabled={busy}>
-          {busy ? (status || "Building your course…") : "Build my course"} <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
+        <button type="submit" className="btn-amber w-full py-3" disabled={busy || extracting}>
+          {extracting
+            ? "Reading your file…"
+            : busy
+            ? (status || "Building your course…")
+            : "Build my course"}{" "}
+          <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
         </button>
-        {busy && (
+        {(busy || extracting) && (
           <p className="text-center text-xs text-bark-50 dark:text-cream-300">
-            This takes a moment while the AI structures your material. You&apos;ll be
-            sent to your course automatically.
+            {extracting
+              ? "Pulling the text out of your file…"
+              : "This takes a moment while the AI structures your material. You’ll be sent to your course automatically."}
           </p>
         )}
       </form>

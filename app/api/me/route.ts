@@ -2,6 +2,7 @@ import { json, guard } from "@/lib/api";
 import { getSessionUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { hasApiKey, MODEL } from "@/lib/ai/provider";
+// MODEL is now a function (resolves env + user-set key).
 import { dataBackend } from "@/lib/util";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ export const GET = guard(async () => {
       user: { id: user.id, email: user.email, name: user.name },
       backend: dataBackend(),
       aiConfigured: hasApiKey(),
-      model: MODEL,
+      model: MODEL(),
     },
     200
   );
