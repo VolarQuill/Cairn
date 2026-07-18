@@ -1,0 +1,24 @@
+# Local copy of Cairn — runs entirely on your machine, no external services.
+#   docker compose up --build
+# Then open http://localhost:3000  (demo account is seeded automatically)
+services:
+  cairn:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATA_BACKEND=local
+      - NODE_ENV=production
+      - CAIRN_SECRET=${CAIRN_SECRET:-local-dev-secret-change-me}
+      # AI provider — set GEMINI_API_KEY (recommended) or ANTHROPIC_API_KEY.
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_BASE_URL=${GEMINI_BASE_URL:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL:-}
+      - CAIRN_MODEL=${CAIRN_MODEL:-}
+    volumes:
+      - cairn-data:/app/data
+
+volumes:
+  cairn-data:

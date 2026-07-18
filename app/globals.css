@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Times New Roman", Times, Georgia, "Liberation Serif", serif;
+  --font-display: "Times New Roman", Times, Georgia, "Liberation Serif", serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream-100 text-bark-300 antialiased;
+    background-image:
+      radial-gradient(1200px 600px at 12% -8%, rgba(226, 148, 38, 0.10), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, rgba(20, 80, 59, 0.08), transparent 55%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-amber-100/40 text-bark-300;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight text-bark-300;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-amber-100 ring-offset-2 ring-offset-cream-100;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-cream-300 bg-cream-50 shadow-soft;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
+           focus-visible:ring-2 focus-visible:ring-amber-100 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-forest-200 text-cream-50 hover:bg-forest-100 active:bg-forest-300 shadow-lift;
+  }
+  .btn-amber {
+    @apply btn bg-amber-100 text-bark-300 hover:bg-amber-50 active:bg-amber-200 shadow-glow;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-bark-200 hover:bg-cream-200 border border-cream-300;
+  }
+  .btn-terra {
+    @apply btn bg-terracotta-100 text-cream-50 hover:bg-terracotta-200;
+  }
+  .input {
+    @apply w-full rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm text-bark-300
+           placeholder:text-bark-50 focus:border-amber-100 focus:ring-2 focus:ring-amber-100/40;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-bark-50;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-cream-300 bg-cream-50 px-3 py-1 text-xs font-medium text-bark-100;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+  .prose-cairn {
+    @apply text-[15px] leading-7 text-bark-200;
+  }
+  .prose-cairn h1 { @apply text-2xl font-display mt-2 mb-3 text-bark-300; }
+  .prose-cairn h2 { @apply text-xl font-display mt-6 mb-2 text-bark-300; }
+  .prose-cairn h3 { @apply text-lg font-semibold mt-5 mb-2 text-bark-200; }
+  .prose-cairn p { @apply mb-3; }
+  .prose-cairn ul { @apply mb-3 list-disc space-y-1 pl-5; }
+  .prose-cairn ol { @apply mb-3 list-decimal space-y-1 pl-5; }
+  .prose-cairn li { @apply pl-1; }
+  .prose-cairn strong { @apply font-semibold text-bark-300; }
+  .prose-cairn a { @apply text-terracotta-100 underline underline-offset-2 hover:text-terracotta-200; }
+  .prose-cairn code {
+    @apply rounded bg-cream-200 px-1.5 py-0.5 font-mono text-[13px] text-forest-100;
+  }
+  .prose-cairn pre {
+    @apply mb-3 overflow-x-auto rounded-xl bg-bark-300 p-4 text-cream-50;
+  }
+  .prose-cairn pre code { @apply bg-transparent p-0 text-cream-50; }
+  .prose-cairn blockquote {
+    @apply my-3 border-l-4 border-amber-100 pl-4 italic text-bark-100;
+  }
+}
+
+/* Thin warm scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #E4C9A8 transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: #E4C9A8; border-radius: 9999px; border: 2px solid transparent; background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: #C9683F; background-clip: content-box; }
+
+/* Inline SVG icons (replacement for emoji). They inherit text color and sit
+   inline with labels; size with the `size` prop or Tailwind h-/w- classes. */
+.icon { display: inline-flex; align-items: center; justify-content: center; flex: none; }
