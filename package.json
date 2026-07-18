@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "Cairn — a personalized AI learning companion. Turn any source into a structured, adaptive course.",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
