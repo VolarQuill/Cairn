@@ -32,3 +32,6 @@ venv/
 
 # deployable copy (separate repo: cairn-vercel)
 cairn-vercel/
+
+# TypeScript build info
+*.tsbuildinfo
