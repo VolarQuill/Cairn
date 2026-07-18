@@ -72,6 +72,7 @@ export default async function LearnPage({
           <LessonReader
             lesson={activeLesson}
             courseId={course.id}
+            lessons={lessons.map((l) => ({ id: l.id, title: l.title }))}
             initialProgress={progressByLesson[activeLesson.id]}
           />
         </section>

@@ -7,6 +7,7 @@ import { Markdown } from "@/components/Markdown";
 import { MasteryBadge } from "@/components/MasteryBadge";
 import { ExplainPanel } from "@/components/ExplainPanel";
 import { Icon } from "@/components/icons";
+import { QuizRunner } from "@/components/QuizRunner";
 
 const GRADES: { grade: 0 | 1 | 2 | 3; label: string; cls: string }[] = [
   { grade: 0, label: "Again", cls: "btn-terra" },
@@ -18,10 +19,12 @@ const GRADES: { grade: 0 | 1 | 2 | 3; label: string; cls: string }[] = [
 export function LessonReader({
   lesson,
   courseId,
+  lessons,
   initialProgress,
 }: {
   lesson: Lesson;
   courseId: string;
+  lessons: { id: string; title: string }[];
   initialProgress?: Progress;
 }) {
   const [progress, setProgress] = useState<Progress | undefined>(initialProgress);
@@ -118,9 +121,13 @@ export function LessonReader({
       </div>
 
       <div className="mt-4 flex flex-wrap gap-3">
-        <Link href={`/courses/${courseId}/practice?lesson=${lesson.id}`} className="btn-primary">
-          <Icon name="target" className="inline h-4 w-4 align-middle" /> Quiz this lesson
-        </Link>
+        <QuizRunner
+          courseId={courseId}
+          initialLessonId={lesson.id}
+          lessons={lessons}
+          triggerLabel="Quiz this lesson"
+          triggerClassName="btn-primary"
+        />
         <Link href={`/courses/${courseId}/chat`} className="btn-ghost">
           <Icon name="chat" className="inline h-4 w-4 align-middle" /> Ask the tutor
         </Link>

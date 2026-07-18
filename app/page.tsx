@@ -214,7 +214,7 @@ export default async function Landing() {
           <div className="flex-1">
             <h2 className="text-3xl">Designed to feel like a good book</h2>
             <p className="mt-3 max-w-md text-bark-100 dark:text-cream-200">
-              Warm forest greens and amber on cream, set in Times New Roman. No
+              Warm forest greens and amber on cream, set in Inter. No
               cold blues, no purple gradients — just a calm place to think. And it
               respects your setup: run it on Vercel + Supabase, or entirely on
               your own machine with a local data store.

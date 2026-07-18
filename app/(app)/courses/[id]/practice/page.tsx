@@ -36,11 +36,18 @@ export default async function PracticePage({
       </div>
 
       <div className="mt-6">
-        <QuizRunner
-          courseId={course.id}
-          lessons={lessons.map((l) => ({ id: l.id, title: l.title }))}
-          initialLessonId={searchParams.lesson}
-        />
+        <h2 className="text-lg font-semibold">Flashcard quiz</h2>
+        <p className="mt-1 text-sm text-bark-50 dark:text-cream-300">
+          Open an interactive, full-screen flashcard deck over your course material.
+        </p>
+        <div className="mt-4">
+          <QuizRunner
+            courseId={course.id}
+            lessons={lessons.map((l) => ({ id: l.id, title: l.title }))}
+            initialLessonId={searchParams.lesson}
+            triggerLabel="Start quiz"
+          />
+        </div>
       </div>
     </div>
   );

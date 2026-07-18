@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: "Times New Roman", Times, Georgia, "Liberation Serif", serif;
-  --font-display: "Times New Roman", Times, Georgia, "Liberation Serif", serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 @layer base {
@@ -84,7 +84,7 @@
     @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
   }
   .prose-cairn {
-    @apply text-[15px] leading-7 text-bark-200;
+    @apply text-[16px] leading-8 text-bark-200;
     @apply dark:text-cream-200;
   }
   .prose-cairn h1 { @apply text-2xl font-display mt-2 mb-3 text-bark-300; @apply dark:text-cream-50; }
@@ -180,3 +180,20 @@
 /* Inline SVG icons (replacement for emoji). They inherit text color and sit
    inline with labels; size with the `size` prop or Tailwind h-/w- classes. */
 .icon { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+
+/* ---- Quiz overlay animations ---- */
+@keyframes quizSlideRight {
+  from { opacity: 0; transform: translateX(56px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes quizSlideLeft {
+  from { opacity: 0; transform: translateX(-56px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes quizOverlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.quiz-slide-right { animation: quizSlideRight 0.34s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.quiz-slide-left { animation: quizSlideLeft 0.34s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.quiz-overlay-fade { animation: quizOverlayFade 0.2s ease-out both; }
