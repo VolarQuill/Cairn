@@ -108,12 +108,12 @@ export function QuizRunner({
       {loading && !results && (
         <div className="card mt-5 flex items-center gap-3 p-6">
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-amber-100 border-t-transparent" />
-          <span className="text-bark-100">Generating your quiz…</span>
+          <span className="text-bark-100 dark:text-cream-200">Generating your quiz…</span>
         </div>
       )}
 
       {err && (
-        <div className="mt-4 rounded-lg border border-terracotta-200/40 bg-terracotta-50/10 px-3 py-2 text-sm text-terracotta-200">
+        <div className="mt-4 rounded-lg border border-terracotta-200/40 bg-terracotta-50/10 px-3 py-2 text-sm text-terracotta-200 dark:text-terracotta-100">
           {err}
         </div>
       )}
@@ -136,7 +136,7 @@ export function QuizRunner({
                       className={`rounded-xl border px-4 py-2.5 text-left text-sm transition ${
                         isSel
                           ? "border-amber-100 bg-amber-50/25 font-semibold"
-                          : "border-cream-300 hover:border-amber-100/60"
+                          : "border-cream-300 hover:border-amber-100/60 dark:border-forest-200/40"
                       }`}
                     >
                       {String.fromCharCode(65 + oi)}. {opt}
@@ -161,10 +161,10 @@ export function QuizRunner({
       {results && (
         <div className="mt-5">
           <div className="card flex flex-col items-center gap-2 p-6 text-center">
-            <div className="font-display text-4xl text-forest-200">
+            <div className="font-display text-4xl text-forest-200 dark:text-moss-50">
               {results.score}/{results.total}
             </div>
-            <p className="text-bark-100">
+            <p className="text-bark-100 dark:text-cream-200">
               {results.score === results.total
                 ? "Perfect — that really stuck! "
                 : results.score >= results.total / 2
@@ -210,15 +210,15 @@ export function QuizRunner({
                       const isCorrect = oi === r?.correct_index;
                       const isChosen = oi === chosen;
                       const cls = isCorrect
-                        ? "text-forest-100 font-semibold"
+                        ? "text-forest-100 font-semibold dark:text-moss-50"
                         : isChosen
-                        ? "text-terracotta-200 font-semibold line-through"
-                        : "text-bark-100";
+                        ? "text-terracotta-200 font-semibold line-through dark:text-terracotta-100"
+                        : "text-bark-100 dark:text-cream-200";
                       return (
                         <div key={oi} className={cls}>
                           {String.fromCharCode(65 + oi)}. {opt}
                           {isCorrect && (
-                            <Icon name="check" className="inline h-4 w-4 align-middle text-moss-100" />
+                            <Icon name="check" className="inline h-4 w-4 align-middle text-moss-100 dark:text-moss-50" />
                           )}
                           {isChosen && !isCorrect && " (your answer)"}
                         </div>
@@ -226,7 +226,7 @@ export function QuizRunner({
                     })}
                   </div>
                   {r?.explanation && (
-                    <div className="mt-3 rounded-lg bg-cream-200/60 p-3 text-sm text-bark-100">
+                    <div className="mt-3 rounded-lg bg-cream-200/60 p-3 text-sm text-bark-100 dark:bg-forest-200/60 dark:text-cream-200">
                       <span className="font-semibold">Why: </span>
                       <Markdown>{r.explanation}</Markdown>
                     </div>

@@ -18,20 +18,36 @@
       radial-gradient(1000px 500px at 100% 0%, rgba(20, 80, 59, 0.08), transparent 55%);
     background-attachment: fixed;
   }
+  .dark body {
+    @apply bg-forest-400 text-cream-100;
+    background-image:
+      radial-gradient(1200px 600px at 12% -8%, rgba(226, 148, 38, 0.10), transparent 60%),
+      radial-gradient(1000px 500px at 100% 0%, rgba(92, 138, 74, 0.10), transparent 55%);
+  }
   ::selection {
     @apply bg-amber-100/40 text-bark-300;
+  }
+  .dark ::selection {
+    @apply bg-amber-100/30 text-cream-50;
   }
   h1, h2, h3, h4 {
     @apply font-display tracking-tight text-bark-300;
   }
+  .dark h1, .dark h2, .dark h3, .dark h4 {
+    @apply text-cream-50;
+  }
   :focus-visible {
     @apply outline-none ring-2 ring-amber-100 ring-offset-2 ring-offset-cream-100;
+  }
+  .dark :focus-visible {
+    @apply ring-offset-forest-400;
   }
 }
 
 @layer components {
   .card {
     @apply rounded-2xl border border-cream-300 bg-cream-50 shadow-soft;
+    @apply dark:border-forest-200/30 dark:bg-forest-300 dark:text-cream-100;
   }
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
@@ -45,6 +61,7 @@
   }
   .btn-ghost {
     @apply btn bg-transparent text-bark-200 hover:bg-cream-200 border border-cream-300;
+    @apply dark:border-forest-200/40 dark:text-cream-200 dark:hover:bg-forest-200/50 dark:hover:text-cream-50;
   }
   .btn-terra {
     @apply btn bg-terracotta-100 text-cream-50 hover:bg-terracotta-200;
@@ -52,39 +69,98 @@
   .input {
     @apply w-full rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm text-bark-300
            placeholder:text-bark-50 focus:border-amber-100 focus:ring-2 focus:ring-amber-100/40;
+    @apply dark:border-forest-200/40 dark:bg-forest-400 dark:text-cream-100 dark:placeholder:text-cream-300/60
+           dark:focus:border-amber-100 dark:focus:ring-amber-100/30;
   }
   .label {
     @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-bark-50;
+    @apply dark:text-cream-300;
   }
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full border border-cream-300 bg-cream-50 px-3 py-1 text-xs font-medium text-bark-100;
+    @apply dark:border-forest-200/40 dark:bg-forest-300 dark:text-cream-200;
   }
   .pill {
     @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
   }
   .prose-cairn {
     @apply text-[15px] leading-7 text-bark-200;
+    @apply dark:text-cream-200;
   }
-  .prose-cairn h1 { @apply text-2xl font-display mt-2 mb-3 text-bark-300; }
-  .prose-cairn h2 { @apply text-xl font-display mt-6 mb-2 text-bark-300; }
-  .prose-cairn h3 { @apply text-lg font-semibold mt-5 mb-2 text-bark-200; }
+  .prose-cairn h1 { @apply text-2xl font-display mt-2 mb-3 text-bark-300; @apply dark:text-cream-50; }
+  .prose-cairn h2 { @apply text-xl font-display mt-6 mb-2 text-bark-300; @apply dark:text-cream-50; }
+  .prose-cairn h3 { @apply text-lg font-semibold mt-5 mb-2 text-bark-200; @apply dark:text-cream-100; }
   .prose-cairn p { @apply mb-3; }
   .prose-cairn ul { @apply mb-3 list-disc space-y-1 pl-5; }
   .prose-cairn ol { @apply mb-3 list-decimal space-y-1 pl-5; }
   .prose-cairn li { @apply pl-1; }
-  .prose-cairn strong { @apply font-semibold text-bark-300; }
-  .prose-cairn a { @apply text-terracotta-100 underline underline-offset-2 hover:text-terracotta-200; }
+  .prose-cairn strong { @apply font-semibold text-bark-300; @apply dark:text-cream-50; }
+  .prose-cairn a { @apply text-terracotta-100 underline underline-offset-2 hover:text-terracotta-200; @apply dark:text-terracotta-50 dark:hover:text-terracotta-100; }
   .prose-cairn code {
     @apply rounded bg-cream-200 px-1.5 py-0.5 font-mono text-[13px] text-forest-100;
+    @apply dark:bg-forest-400 dark:text-amber-50;
   }
   .prose-cairn pre {
     @apply mb-3 overflow-x-auto rounded-xl bg-bark-300 p-4 text-cream-50;
+    @apply dark:bg-bark-200;
   }
   .prose-cairn pre code { @apply bg-transparent p-0 text-cream-50; }
   .prose-cairn blockquote {
     @apply my-3 border-l-4 border-amber-100 pl-4 italic text-bark-100;
+    @apply dark:border-amber-100 dark:text-cream-200;
   }
 }
+
+/* ---- Interactive utilities ---- */
+
+/* Expanding underline that grows from the left on hover/focus.
+   Apply to an inline <span> wrapping a label (e.g. nav items). */
+.nav-underline {
+  position: relative;
+  display: inline-block;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  border-radius: 9999px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-underline:hover::after,
+.nav-underline:focus-visible::after,
+.nav-underline[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+/* Subtle lift on hover for cards/links. */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+/* Active nav indicator: a small glowing dot that fades in. */
+.nav-dot::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 18px;
+  width: 3px;
+  border-radius: 9999px;
+  background: #E29426;
+  transform: translateY(-50%) scaleY(0);
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+.nav-dot[data-active="true"]::before { transform: translateY(-50%) scaleY(1); }
 
 /* Thin warm scrollbar */
 * {
@@ -96,6 +172,10 @@
   background: #E4C9A8; border-radius: 9999px; border: 2px solid transparent; background-clip: content-box;
 }
 *::-webkit-scrollbar-thumb:hover { background: #C9683F; background-clip: content-box; }
+.dark *::-webkit-scrollbar-thumb {
+  background: #2E6B52;
+}
+.dark *::-webkit-scrollbar-thumb:hover { background: #5C8A4A; }
 
 /* Inline SVG icons (replacement for emoji). They inherit text color and sit
    inline with labels; size with the `size` prop or Tailwind h-/w- classes. */

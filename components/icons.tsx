@@ -39,7 +39,9 @@ export type IconName =
   | "close"
   | "arrow-right"
   | "arrow-left"
-  | "menu";
+  | "menu"
+  | "sun"
+  | "moon";
 
 const PATHS: Record<IconName, React.ReactNode> = {
   // A small cairn — stacked trail stones.
@@ -222,6 +224,15 @@ const PATHS: Record<IconName, React.ReactNode> = {
   "arrow-left": <path d="M19 12H5M11 6l-6 6 6 6" />,
   // Menu (hamburger)
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  // Sun
+  sun: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
+    </>
+  ),
+  // Moon
+  moon: <path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z" />,
 };
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {

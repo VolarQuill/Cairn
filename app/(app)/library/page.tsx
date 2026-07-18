@@ -19,7 +19,7 @@ export default async function LibraryPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl">Library</h1>
-          <p className="mt-1 text-bark-100">
+          <p className="mt-1 text-bark-100 dark:text-cream-200">
             {courses.length} course{courses.length === 1 ? "" : "s"} in your collection.
           </p>
         </div>

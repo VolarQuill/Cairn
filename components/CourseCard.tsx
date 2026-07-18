@@ -19,25 +19,25 @@ export function CourseCard({
   return (
     <Link
       href={`/courses/${course.id}`}
-      className="card group flex flex-col p-5 transition hover:-translate-y-0.5 hover:shadow-lift"
+      className="card group flex flex-col p-5 transition hover:-translate-y-0.5 hover:shadow-lift hover-lift"
     >
       <div className="flex items-center justify-between">
         <span className="chip capitalize">{LEVEL_LABEL[course.level] ?? course.level}</span>
-        <span className="text-xs text-bark-50">
+        <span className="text-xs text-bark-50 dark:text-cream-300">
           {d.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
         </span>
       </div>
-      <h3 className="mt-3 text-xl leading-snug transition group-hover:text-forest-200">
+      <h3 className="mt-3 text-xl leading-snug transition group-hover:text-forest-200 dark:group-hover:text-moss-50">
         {course.title}
       </h3>
-      <p className="mt-2 line-clamp-3 flex-1 text-sm text-bark-100">
+      <p className="mt-2 line-clamp-3 flex-1 text-sm text-bark-100 dark:text-cream-200">
         {course.description}
       </p>
-      <div className="mt-4 flex items-center gap-3 text-xs text-bark-50">
+      <div className="mt-4 flex items-center gap-3 text-xs text-bark-50 dark:text-cream-300">
         <span className="inline-flex items-center gap-1.5">
           <Icon name="book-open" className="h-4 w-4" /> {lessonCount} lessons
         </span>
-        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-cream-200 px-2.5 py-1 font-medium text-bark-100">
+        <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-cream-200 px-2.5 py-1 font-medium text-bark-100 dark:bg-forest-300 dark:text-cream-200">
           Open <Icon name="arrow-right" className="h-3.5 w-3.5" />
         </span>
       </div>

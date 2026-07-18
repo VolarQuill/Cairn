@@ -3,6 +3,7 @@ import { Logo } from "@/components/Logo";
 import { Icon, type IconName } from "@/components/icons";
 import { getSessionUser } from "@/lib/auth";
 import { dataBackend } from "@/lib/util";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const features: { icon: IconName; title: string; body: string }[] = [
   {
@@ -51,21 +52,22 @@ export default async function Landing() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-cream-300/70 bg-cream-100/80 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-cream-300/70 bg-cream-100/80 backdrop-blur dark:border-cream-300/10 dark:bg-forest-400/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
           <Logo />
-          <nav className="hidden items-center gap-7 text-sm font-medium text-bark-100 md:flex">
-            <a href="#features" className="hover:text-terracotta-100">Features</a>
-            <a href="#how" className="hover:text-terracotta-100">How it works</a>
-            <a href="#theme" className="hover:text-terracotta-100">Design</a>
+          <nav className="hidden items-center gap-7 text-sm font-medium text-bark-100 md:flex dark:text-cream-200">
+            <a href="#features" className="hover:text-terracotta-100 dark:hover:text-terracotta-50"><span className="nav-underline">Features</span></a>
+            <a href="#how" className="hover:text-terracotta-100 dark:hover:text-terracotta-50"><span className="nav-underline">How it works</span></a>
+            <a href="#theme" className="hover:text-terracotta-100 dark:hover:text-terracotta-50"><span className="nav-underline">Design</span></a>
             <a
               href="https://github.com"
-              className="hover:text-terracotta-100"
+              className="hover:text-terracotta-100 dark:hover:text-terracotta-50"
             >
-              Source
+              <span className="nav-underline">Source</span>
             </a>
           </nav>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             {user ? (
               <Link href="/dashboard" className="btn-primary">
                 Open app
@@ -88,15 +90,15 @@ export default async function Landing() {
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
           <div className="animate-fade-up">
-            <span className="pill bg-moss-100/20 text-forest-100">
+            <span className="pill bg-moss-100/20 text-forest-100 dark:bg-moss-100/15 dark:text-moss-50">
               <span className="h-2 w-2 rounded-full bg-amber-100" /> AI learning, the warm way
             </span>
             <h1 className="mt-5 text-5xl leading-[1.05] md:text-6xl">
               Build your path.
               <br />
-              <span className="text-forest-200">Stack your knowledge.</span>
+              <span className="text-forest-200 dark:text-moss-50">Stack your knowledge.</span>
             </h1>
-            <p className="mt-5 max-w-md text-lg text-bark-100">
+            <p className="mt-5 max-w-md text-lg text-bark-100 dark:text-cream-200">
               Cairn turns any source into a structured, adaptive course — with
               multi-style explanations, smart quizzes, a study tutor, and spaced
               review that makes learning actually stick.
@@ -109,8 +111,8 @@ export default async function Landing() {
                 See how it works
               </a>
             </div>
-            <p className="mt-4 text-sm text-bark-50">
-              Running in <strong className="text-bark-100">{backend}</strong> mode ·
+            <p className="mt-4 text-sm text-bark-50 dark:text-cream-300">
+              Running in <strong className="text-bark-100 dark:text-cream-200">{backend}</strong> mode ·
               works with or without an API key.
             </p>
           </div>
@@ -120,22 +122,22 @@ export default async function Landing() {
             <div className="card rotate-1 mx-auto max-w-md p-5 shadow-lift">
               <div className="flex items-center justify-between">
                 <span className="chip">Module 2 · Core Ideas</span>
-                <span className="text-xs text-bark-50">8 min</span>
+                <span className="text-xs text-bark-50 dark:text-cream-300">8 min</span>
               </div>
               <h3 className="mt-3 text-xl">Why systems beat goals</h3>
-              <p className="mt-2 text-sm text-bark-100">
+              <p className="mt-2 text-sm text-bark-100 dark:text-cream-200">
                 A goal is a moment; a system is a habit. Goals set direction, but
                 systems do the walking…
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className="pill bg-cream-200 text-bark-100"># systems</span>
-                <span className="pill bg-cream-200 text-bark-100"># habits</span>
+                <span className="pill bg-cream-200 text-bark-100 dark:bg-forest-200/40 dark:text-cream-200"># systems</span>
+                <span className="pill bg-cream-200 text-bark-100 dark:bg-forest-200/40 dark:text-cream-200"># habits</span>
               </div>
               <div className="mt-4 grid grid-cols-3 gap-2">
                 {["Simple", "Analogy", "Visual"].map((s) => (
                   <div
                     key={s}
-                    className="rounded-lg border border-cream-300 bg-cream-100 py-2 text-center text-xs font-medium text-bark-100"
+                    className="rounded-lg border border-cream-300 bg-cream-100 py-2 text-center text-xs font-medium text-bark-100 dark:border-forest-200/40 dark:bg-forest-200/40 dark:text-cream-200"
                   >
                     {s}
                   </div>
@@ -143,10 +145,10 @@ export default async function Landing() {
               </div>
             </div>
             <div className="card -rotate-2 absolute -bottom-6 -left-4 hidden w-44 p-3 shadow-soft sm:block">
-              <div className="text-xs font-semibold text-forest-200">
-                Quiz <Icon name="check" className="inline h-3.5 w-3.5 align-middle text-moss-100" /> 4/5
+              <div className="text-xs font-semibold text-forest-200 dark:text-moss-50">
+                Quiz <Icon name="check" className="inline h-3.5 w-3.5 align-middle text-moss-100 dark:text-moss-50" /> 4/5
               </div>
-              <div className="mt-1 text-xs text-bark-50">
+              <div className="mt-1 text-xs text-bark-50 dark:text-cream-300">
                 “Distractor explained clearly.”
               </div>
             </div>
@@ -155,7 +157,7 @@ export default async function Landing() {
       </section>
 
       {/* Stats */}
-      <section className="border-y border-cream-300 bg-cream-50">
+      <section className="border-y border-cream-300 bg-cream-50 dark:border-forest-200/30 dark:bg-forest-300">
         <div className="mx-auto grid max-w-5xl grid-cols-3 gap-4 px-5 py-8 text-center">
           {[
             ["5", "explanation styles"],
@@ -163,8 +165,8 @@ export default async function Landing() {
             ["2", "ways to run it"],
           ].map(([n, l]) => (
             <div key={l}>
-              <div className="font-display text-3xl text-forest-200">{n}</div>
-              <div className="text-sm text-bark-50">{l}</div>
+              <div className="font-display text-3xl text-forest-200 dark:text-moss-50">{n}</div>
+              <div className="text-sm text-bark-50 dark:text-cream-300">{l}</div>
             </div>
           ))}
         </div>
@@ -173,23 +175,23 @@ export default async function Landing() {
       {/* Features */}
       <section id="features" className="mx-auto max-w-6xl px-5 py-16 md:py-20">
         <h2 className="text-3xl md:text-4xl">Everything you need to learn deeply</h2>
-        <p className="mt-2 max-w-xl text-bark-100">
+        <p className="mt-2 max-w-xl text-bark-100 dark:text-cream-200">
           One calm workspace that turns passive reading into active, durable
           understanding.
         </p>
         <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
             <div key={f.title} className="card p-5 transition hover:-translate-y-0.5 hover:shadow-lift">
-              <Icon name={f.icon} size={26} className="text-forest-200" />
+              <Icon name={f.icon} size={26} className="text-forest-200 dark:text-moss-50" />
               <h3 className="mt-3 text-lg">{f.title}</h3>
-              <p className="mt-1.5 text-sm text-bark-100">{f.body}</p>
+              <p className="mt-1.5 text-sm text-bark-100 dark:text-cream-200">{f.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* How it works */}
-      <section id="how" className="bg-forest-300/5">
+      <section id="how" className="bg-forest-300/5 dark:bg-forest-300/40">
         <div className="mx-auto max-w-6xl px-5 py-16 md:py-20">
           <h2 className="text-3xl md:text-4xl">How Cairn works</h2>
           <div className="mt-9 grid gap-5 md:grid-cols-4">
@@ -199,7 +201,7 @@ export default async function Landing() {
                   {s.n}
                 </div>
                 <h3 className="mt-3 text-lg">{s.t}</h3>
-                <p className="mt-1.5 text-sm text-bark-100">{s.d}</p>
+                <p className="mt-1.5 text-sm text-bark-100 dark:text-cream-200">{s.d}</p>
               </div>
             ))}
           </div>
@@ -208,10 +210,10 @@ export default async function Landing() {
 
       {/* Theme / design note */}
       <section id="theme" className="mx-auto max-w-6xl px-5 py-16 md:py-20">
-        <div className="card flex flex-col gap-6 bg-gradient-to-br from-cream-50 to-clay-100 p-8 md:flex-row md:items-center">
+        <div className="card flex flex-col gap-6 bg-gradient-to-br from-cream-50 to-clay-100 p-8 md:flex-row md:items-center dark:from-forest-300 dark:to-forest-400">
           <div className="flex-1">
             <h2 className="text-3xl">Designed to feel like a good book</h2>
-            <p className="mt-3 max-w-md text-bark-100">
+            <p className="mt-3 max-w-md text-bark-100 dark:text-cream-200">
               Warm forest greens and amber on cream, set in Times New Roman. No
               cold blues, no purple gradients — just a calm place to think. And it
               respects your setup: run it on Vercel + Supabase, or entirely on
@@ -231,7 +233,7 @@ export default async function Landing() {
                   className="h-14 w-14 rounded-2xl border border-black/5 shadow-soft"
                   style={{ background: c }}
                 />
-                <div className="mt-1.5 text-xs text-bark-50">{n}</div>
+                <div className="mt-1.5 text-xs text-bark-50 dark:text-cream-300">{n}</div>
               </div>
             ))}
           </div>
@@ -262,11 +264,11 @@ export default async function Landing() {
         </div>
       </section>
 
-      <footer className="border-t border-cream-300">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-7 text-sm text-bark-50 sm:flex-row">
+      <footer className="border-t border-cream-300 dark:border-forest-200/30">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-7 text-sm text-bark-50 dark:text-cream-300 sm:flex-row">
           <Logo size={26} />
           <p>Cairn — an AI learning companion. </p>
-          <a href="https://github.com" className="hover:text-terracotta-100">
+          <a href="https://github.com" className="hover:text-terracotta-100 dark:hover:text-terracotta-50">
             View source <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
           </a>
         </div>

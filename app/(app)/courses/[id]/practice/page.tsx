@@ -24,7 +24,7 @@ export default async function PracticePage({
   return (
     <div className="mx-auto max-w-3xl px-5 py-6">
       <div className="flex items-center justify-between gap-3">
-        <Link href="/library" className="text-sm text-bark-50 hover:text-terracotta-100">
+        <Link href="/library" className="text-sm text-bark-50 hover:text-terracotta-100 dark:text-cream-300 dark:hover:text-terracotta-50">
           <Icon name="arrow-left" className="inline h-4 w-4 align-middle" /> Library
         </Link>
         <h1 className="truncate text-xl font-semibold">{course.title}</h1>

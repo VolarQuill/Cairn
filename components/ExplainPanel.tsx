@@ -53,7 +53,7 @@ export function ExplainPanel({
         {out && (
           <button
             onClick={() => setOpen((v) => !v)}
-            className="text-sm text-terracotta-100 hover:text-terracotta-200"
+            className="text-sm text-terracotta-100 hover:text-terracotta-200 dark:text-terracotta-50 dark:hover:text-terracotta-100"
           >
             {open ? "Hide" : "Show"} explanation
           </button>
@@ -67,7 +67,7 @@ export function ExplainPanel({
             className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
               style === s.id
                 ? "bg-amber-100 text-bark-300"
-                : "border border-cream-300 text-bark-100 hover:border-amber-100"
+                : "border border-cream-300 text-bark-100 hover:border-amber-100 dark:border-forest-200/40 dark:text-cream-200"
             }`}
           >
             <Icon name={s.icon} className="inline h-4 w-4 align-middle" /> {s.label}
@@ -87,9 +87,9 @@ export function ExplainPanel({
       </div>
 
       {open && (loading || out || err) && (
-        <div className="mt-4 rounded-xl border border-cream-300 bg-cream-50 p-4">
-          {loading && <p className="text-sm text-bark-50">Cairn is writing…</p>}
-          {err && <p className="text-sm text-terracotta-200">{err}</p>}
+        <div className="mt-4 rounded-xl border border-cream-300 bg-cream-50 p-4 dark:border-forest-200/40 dark:bg-forest-300">
+          {loading && <p className="text-sm text-bark-50 dark:text-cream-300">Cairn is writing…</p>}
+          {err && <p className="text-sm text-terracotta-200 dark:text-terracotta-100">{err}</p>}
           {out && !loading && <Markdown>{out}</Markdown>}
         </div>
       )}

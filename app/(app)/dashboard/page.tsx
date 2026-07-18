@@ -47,7 +47,7 @@ export default async function DashboardPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl">Hello, {user.name.split(" ")[0]} <Icon name="wave" size={26} className="inline text-amber-100 align-middle" /></h1>
-          <p className="mt-1 text-bark-100">Here&apos;s where your learning stands.</p>
+          <p className="mt-1 text-bark-100 dark:text-cream-200">Here&apos;s where your learning stands.</p>
         </div>
         <Link href="/create" className="btn-amber">
           <Icon name="plus" className="inline h-4 w-4 align-middle" /> New course
@@ -58,9 +58,9 @@ export default async function DashboardPage() {
       <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((s) => (
           <div key={s.label} className="card p-4">
-            <Icon name={s.icon} size={22} className="text-forest-200" />
-            <div className="mt-1 font-display text-3xl text-forest-200">{s.value}</div>
-            <div className="text-sm text-bark-50">{s.label}</div>
+            <Icon name={s.icon} size={22} className="text-forest-200 dark:text-moss-50" />
+            <div className="mt-1 font-display text-3xl text-forest-200 dark:text-moss-50">{s.value}</div>
+            <div className="text-sm text-bark-50 dark:text-cream-300">{s.label}</div>
           </div>
         ))}
       </div>
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-2xl">Your courses</h2>
             {courses.length > 6 && (
-              <Link href="/library" className="text-sm text-terracotta-100 hover:text-terracotta-200">
+              <Link href="/library" className="text-sm text-terracotta-100 hover:text-terracotta-200 dark:text-terracotta-50 dark:hover:text-terracotta-100">
                 View all <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
               </Link>
             )}
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
         {/* Due for review */}
         <div>
           <h2 className="text-2xl">Due for review</h2>
-          <p className="mt-1 text-sm text-bark-100">
+          <p className="mt-1 text-sm text-bark-100 dark:text-cream-200">
             {dueNow.length === 0
               ? "All caught up — nice work."
               : "A few lessons are ready for a quick refresher."}
@@ -103,19 +103,19 @@ export default async function DashboardPage() {
                 <Link
                   key={p.id}
                   href={`/courses/${meta.courseId}`}
-                  className="card flex items-center justify-between p-3.5 hover:shadow-lift"
+                  className="card flex items-center justify-between p-3.5 hover:shadow-lift hover-lift"
                 >
                   <div className="min-w-0">
                     <div className="truncate text-sm font-semibold">{meta.title}</div>
-                    <div className="truncate text-xs text-bark-50">{meta.courseTitle}</div>
+                    <div className="truncate text-xs text-bark-50 dark:text-cream-300">{meta.courseTitle}</div>
                   </div>
                   <MasteryBadge status={p.status} />
                 </Link>
               );
             })}
             {dueNow.length === 0 && (
-              <div className="card flex items-center gap-3 p-4 text-sm text-bark-100">
-                <Icon name="leaf" size={22} className="text-moss-100" /> Nothing due. Your brain thanks you.
+              <div className="card flex items-center gap-3 p-4 text-sm text-bark-100 dark:text-cream-200">
+                <Icon name="leaf" size={22} className="text-moss-100 dark:text-moss-50" /> Nothing due. Your brain thanks you.
               </div>
             )}
           </div>
@@ -130,7 +130,7 @@ function EmptyState() {
     <div className="card flex flex-col items-center gap-3 p-10 text-center">
       <Logo size={44} withWord={false} href={null} />
       <h3 className="text-xl">No courses yet</h3>
-      <p className="max-w-sm text-sm text-bark-100">
+      <p className="max-w-sm text-sm text-bark-100 dark:text-cream-200">
         Turn an article, a document, a link, or a topic into a structured course in
         under a minute.
       </p>

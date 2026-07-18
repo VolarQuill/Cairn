@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -41,14 +42,15 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-5 py-10">
+    <main className="relative flex min-h-screen items-center justify-center px-5 py-10 dark:bg-forest-400">
+      <div className="absolute right-4 top-4 z-10"><ThemeToggle /></div>
       <div className="w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Logo size={40} />
         </div>
         <div className="card p-7">
           <h1 className="text-2xl">Create your Cairn</h1>
-          <p className="mt-1 text-sm text-bark-100">
+          <p className="mt-1 text-sm text-bark-100 dark:text-cream-200">
             Free to use. Your courses live with you.
           </p>
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
@@ -90,12 +92,12 @@ export default function SignupPage() {
               />
             </div>
             {error && (
-              <div className="rounded-lg border border-terracotta-200/40 bg-terracotta-50/10 px-3 py-2 text-sm text-terracotta-200">
+              <div className="rounded-lg border border-terracotta-200/40 bg-terracotta-50/10 px-3 py-2 text-sm text-terracotta-200 dark:border-terracotta-100/40 dark:bg-terracotta-100/10 dark:text-terracotta-100">
                 {error}
               </div>
             )}
             {info && (
-              <div className="rounded-lg border border-moss-100/40 bg-moss-100/10 px-3 py-2 text-sm text-forest-100">
+              <div className="rounded-lg border border-moss-100/40 bg-moss-100/10 px-3 py-2 text-sm text-forest-100 dark:text-moss-50">
                 {info}
               </div>
             )}
@@ -103,9 +105,9 @@ export default function SignupPage() {
               {loading ? "Creating…" : "Create account"}
             </button>
           </form>
-          <p className="mt-5 text-center text-sm text-bark-50">
+          <p className="mt-5 text-center text-sm text-bark-50 dark:text-cream-300">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-terracotta-100 hover:text-terracotta-200">
+            <Link href="/login" className="font-semibold text-terracotta-100 hover:text-terracotta-200 dark:text-terracotta-50 dark:hover:text-terracotta-100">
               Sign in
             </Link>
           </p>

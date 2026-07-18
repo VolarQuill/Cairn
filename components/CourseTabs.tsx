@@ -20,7 +20,7 @@ export function CourseTabs({
     { href: `${base}/chat`, label: "Chat", icon: "chat", match: `${base}/chat` },
   ];
   return (
-    <div className="flex gap-1 rounded-xl border border-cream-300 bg-cream-50 p-1">
+    <div className="flex gap-1 rounded-xl border border-cream-300 bg-cream-50 p-1 dark:border-forest-200/40 dark:bg-forest-300">
       {tabs.map((t) => {
         const isActive = pathname === t.match || pathname.startsWith(t.match + "/");
         return (
@@ -30,10 +30,10 @@ export function CourseTabs({
             className={`flex-1 rounded-lg px-3 py-2 text-center text-sm font-medium transition ${
               isActive
                 ? "bg-forest-200 text-cream-50"
-                : "text-bark-100 hover:bg-cream-200"
+                : "text-bark-100 hover:bg-cream-200 dark:text-cream-200 dark:hover:bg-forest-200/40"
             }`}
           >
-            <Icon name={t.icon} className="inline h-4 w-4 align-middle" /> {t.label}
+            <Icon name={t.icon} className="inline h-4 w-4 align-middle" /> <span className="nav-underline">{t.label}</span>
           </Link>
         );
       })}

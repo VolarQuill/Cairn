@@ -28,7 +28,7 @@ export function Logo({
         <circle cx="27" cy="13.4" r="0.9" fill="#14503B" />
       </svg>
       {withWord && (
-        <span className="font-display text-xl font-semibold tracking-tight text-bark-300">
+        <span className="font-display text-xl font-semibold tracking-tight text-current">
           Cairn
         </span>
       )}

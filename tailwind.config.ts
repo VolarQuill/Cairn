@@ -5,6 +5,7 @@ import type { Config } from "tailwindcss";
  * Forest greens + amber/gold + terracotta on cream surfaces.
  */
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",

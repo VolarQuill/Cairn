@@ -62,11 +62,11 @@ export default function CreatePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-8">
-      <Link href="/dashboard" className="text-sm text-bark-50 hover:text-terracotta-100">
+      <Link href="/dashboard" className="text-sm text-bark-50 hover:text-terracotta-100 dark:text-cream-300 dark:hover:text-terracotta-50">
         <Icon name="arrow-left" className="inline h-4 w-4 align-middle" /> Back to dashboard
       </Link>
       <h1 className="mt-3 text-3xl">Create a course</h1>
-      <p className="mt-1 text-bark-100">
+      <p className="mt-1 text-bark-100 dark:text-cream-200">
         Feed Cairn a source and it will build a structured, study-ready course.
       </p>
 
@@ -78,15 +78,15 @@ export default function CreatePage() {
               type="button"
               key={t.id}
               onClick={() => setType(t.id)}
-              className={`rounded-xl border p-3 text-left transition ${
+              className={`rounded-xl border p-3 text-left transition hover-lift ${
                 type === t.id
                   ? "border-amber-100 bg-amber-50/20 shadow-glow"
-                  : "border-cream-300 hover:border-amber-100/60"
+                  : "border-cream-300 hover:border-amber-100/60 dark:border-forest-200/40"
               }`}
             >
-              <Icon name={t.icon} size={22} className="text-forest-200" />
+              <Icon name={t.icon} size={22} className="text-forest-200 dark:text-moss-50" />
               <div className="mt-1 text-sm font-semibold">{t.label}</div>
-              <div className="text-xs text-bark-50">{t.hint}</div>
+              <div className="text-xs text-bark-50 dark:text-cream-300">{t.hint}</div>
             </button>
           ))}
         </div>
@@ -140,7 +140,7 @@ export default function CreatePage() {
                 setText(SAMPLE);
                 setType("text");
               }}
-              className="mt-2 text-xs text-terracotta-100 hover:text-terracotta-200"
+              className="mt-2 text-xs text-terracotta-100 hover:text-terracotta-200 dark:text-terracotta-50 dark:hover:text-terracotta-100"
             >
               Try a sample <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
             </button>
@@ -174,7 +174,7 @@ export default function CreatePage() {
         </div>
 
         {error && (
-          <div className="rounded-lg border border-terracotta-200/40 bg-terracotta-50/10 px-3 py-2 text-sm text-terracotta-200">
+          <div className="rounded-lg border border-terracotta-200/40 bg-terracotta-50/10 px-3 py-2 text-sm text-terracotta-200 dark:text-terracotta-100">
             {error}
           </div>
         )}
@@ -183,7 +183,7 @@ export default function CreatePage() {
           {busy ? (status || "Building your course…") : "Build my course"} <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
         </button>
         {busy && (
-          <p className="text-center text-xs text-bark-50">
+          <p className="text-center text-xs text-bark-50 dark:text-cream-300">
             This takes a moment while the AI structures your material. You&apos;ll be
             sent to your course automatically.
           </p>

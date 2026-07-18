@@ -57,7 +57,7 @@ export function LessonReader({
         {progress && <MasteryBadge status={progress.status} />}
       </div>
       <h1 className="mt-3 text-3xl">{lesson.title}</h1>
-      <div className="mt-1 flex items-center gap-3 text-sm text-bark-50">
+      <div className="mt-1 flex items-center gap-3 text-sm text-bark-50 dark:text-cream-300">
         <span className="inline-flex items-center gap-1.5">
           <Icon name="clock" className="h-4 w-4" /> {lesson.est_minutes} min
         </span>
@@ -70,7 +70,7 @@ export function LessonReader({
       {lesson.objectives?.length > 0 && (
         <div className="card mt-6 p-5">
           <h3 className="text-lg">Learning objectives</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-bark-100">
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-bark-100 dark:text-cream-200">
             {lesson.objectives.map((o, i) => (
               <li key={i}>{o}</li>
             ))}
@@ -84,9 +84,9 @@ export function LessonReader({
           <h3 className="text-lg">Key terms</h3>
           <dl className="mt-2 space-y-2">
             {lesson.key_terms.map((t, i) => (
-              <div key={i} className="border-b border-cream-300 pb-2 last:border-0">
-                <dt className="font-semibold text-forest-200">{t.term}</dt>
-                <dd className="text-sm text-bark-100">{t.definition}</dd>
+              <div key={i} className="border-b border-cream-300 pb-2 last:border-0 dark:border-forest-200/30">
+                <dt className="font-semibold text-forest-200 dark:text-moss-50">{t.term}</dt>
+                <dd className="text-sm text-bark-100 dark:text-cream-200">{t.definition}</dd>
               </div>
             ))}
           </dl>
@@ -99,7 +99,7 @@ export function LessonReader({
       <div className="card mt-5 flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg">How well did this stick?</h3>
-          <p className="text-sm text-bark-50">
+          <p className="text-sm text-bark-50 dark:text-cream-300">
             Rate it and Cairn schedules your next review.
           </p>
         </div>
@@ -126,7 +126,7 @@ export function LessonReader({
         </Link>
       </div>
 
-      {err && <p className="mt-3 text-sm text-terracotta-200">{err}</p>}
+      {err && <p className="mt-3 text-sm text-terracotta-200 dark:text-terracotta-100">{err}</p>}
     </article>
   );
 }

@@ -38,7 +38,7 @@ export function LessonOutline({
     <nav className="space-y-5">
       {modules.map((m) => (
         <div key={m.title}>
-          <div className="mb-1.5 px-2 text-xs font-semibold uppercase tracking-wide text-bark-50">
+          <div className="mb-1.5 px-2 text-xs font-semibold uppercase tracking-wide text-bark-50 dark:text-cream-300">
             {m.title}
           </div>
           <div className="space-y-1">
@@ -49,15 +49,15 @@ export function LessonOutline({
                 <Link
                   key={l.id}
                   href={`/courses/${courseId}?lesson=${l.id}`}
-                  className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition ${
+                  className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition hover-lift ${
                     isActive
-                      ? "bg-amber-50/30 font-semibold text-bark-300"
-                      : "text-bark-100 hover:bg-cream-200"
+                      ? "bg-amber-50/30 font-semibold text-bark-300 dark:text-cream-50"
+                      : "text-bark-100 hover:bg-cream-200 dark:text-cream-200 dark:hover:bg-forest-300"
                   }`}
                 >
                   <span
                     className={`h-2 w-2 shrink-0 rounded-full ${
-                      p ? DOT[p.status] : "bg-cream-300"
+                      p ? DOT[p.status] : "bg-cream-300 dark:bg-forest-200/40"
                     }`}
                   />
                   <span className="truncate">{l.title}</span>

@@ -35,7 +35,7 @@ export default async function LearnPage({
   if (!activeLesson) {
     return (
       <div className="mx-auto max-w-3xl px-5 py-10">
-        <p className="text-bark-100">This course has no lessons yet.</p>
+        <p className="text-bark-100 dark:text-cream-200">This course has no lessons yet.</p>
         <Link href="/dashboard" className="btn-ghost mt-4">
           <Icon name="arrow-left" className="inline h-4 w-4 align-middle" /> Dashboard
         </Link>
@@ -46,7 +46,7 @@ export default async function LearnPage({
   return (
     <div className="mx-auto max-w-6xl px-5 py-6">
       <div className="flex items-center justify-between gap-3">
-        <Link href="/library" className="text-sm text-bark-50 hover:text-terracotta-100">
+        <Link href="/library" className="text-sm text-bark-50 hover:text-terracotta-100 dark:text-cream-300 dark:hover:text-terracotta-50">
           <Icon name="arrow-left" className="inline h-4 w-4 align-middle" /> Library
         </Link>
         <h1 className="truncate text-xl font-semibold">{course.title}</h1>
@@ -59,7 +59,7 @@ export default async function LearnPage({
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[260px_1fr]">
         <aside className="lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:self-start lg:overflow-y-auto">
-          <Suspense fallback={<div className="text-sm text-bark-50">Loading…</div>}>
+          <Suspense fallback={<div className="text-sm text-bark-50 dark:text-cream-300">Loading…</div>}>
             <LessonOutline
               courseId={course.id}
               lessons={lessons}

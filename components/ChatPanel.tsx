@@ -75,10 +75,10 @@ export function ChatPanel({ courseId }: { courseId: string }) {
 
   return (
     <div className="flex h-[calc(100vh-9rem)] flex-col">
-      <div className="flex-1 space-y-4 overflow-y-auto rounded-2xl border border-cream-300 bg-cream-50 p-4">
+      <div className="flex-1 space-y-4 overflow-y-auto rounded-2xl border border-cream-300 bg-cream-50 p-4 dark:border-forest-200/40 dark:bg-forest-300">
         {messages.length === 0 && (
-          <div className="flex h-full flex-col items-center justify-center text-center text-bark-50">
-            <div className="text-forest-200">
+          <div className="flex h-full flex-col items-center justify-center text-center text-bark-50 dark:text-cream-300">
+            <div className="text-forest-200 dark:text-moss-50">
               <Icon name="chat" size={32} />
             </div>
             <p className="mt-2 max-w-sm">
@@ -95,7 +95,7 @@ export function ChatPanel({ courseId }: { courseId: string }) {
               className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
                 m.role === "user"
                   ? "bg-forest-200 text-cream-50"
-                  : "border border-cream-300 bg-cream-100"
+                  : "border border-cream-300 bg-cream-100 dark:border-forest-200/40 dark:bg-forest-400"
               }`}
             >
               {m.role === "assistant" ? (
@@ -108,9 +108,9 @@ export function ChatPanel({ courseId }: { courseId: string }) {
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="rounded-2xl border border-cream-300 bg-cream-100 px-4 py-3">
+            <div className="rounded-2xl border border-cream-300 bg-cream-100 px-4 py-3 dark:border-forest-200/40 dark:bg-forest-400">
               <span className="inline-flex gap-1">
-                <span className="h-2 w-2 animate-pulse-soft rounded-full bg-bark-50" />
+                <span className="h-2 w-2 animate-pulse-soft rounded-full bg-bark-50 dark:bg-cream-300" />
                 <span className="h-2 w-2 animate-pulse-soft rounded-full bg-bark-50 [animation-delay:200ms]" />
                 <span className="h-2 w-2 animate-pulse-soft rounded-full bg-bark-50 [animation-delay:400ms]" />
               </span>
@@ -120,7 +120,7 @@ export function ChatPanel({ courseId }: { courseId: string }) {
         <div ref={endRef} />
       </div>
 
-      {err && <p className="mt-2 text-sm text-terracotta-200">{err}</p>}
+      {err && <p className="mt-2 text-sm text-terracotta-200 dark:text-terracotta-100">{err}</p>}
 
       <form onSubmit={send} className="mt-3 flex gap-2">
         <input
