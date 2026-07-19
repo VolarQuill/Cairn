@@ -142,14 +142,17 @@ alter table public.progress      enable row level security;
 alter table public.client_goals  enable row level security;
 
 -- Profiles
+drop policy if exists "profiles: own" on public.profiles;
 create policy "profiles: own" on public.profiles
   for all using (auth.uid() = id) with check (auth.uid() = id);
 
 -- Courses (owner-only)
+drop policy if exists "courses: owner" on public.courses;
 create policy "courses: owner" on public.courses
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- Lessons (via course ownership)
+drop policy if exists "lessons: owner" on public.lessons;
 create policy "lessons: owner" on public.lessons
   for all using (
     exists (select 1 from public.courses c where c.id = lessons.course_id and c.user_id = auth.uid())
@@ -158,6 +161,7 @@ create policy "lessons: owner" on public.lessons
   );
 
 -- Quizzes (via course ownership)
+drop policy if exists "quizzes: owner" on public.quizzes;
 create policy "quizzes: owner" on public.quizzes
   for all using (
     exists (select 1 from public.courses c where c.id = quizzes.course_id and c.user_id = auth.uid())
@@ -166,17 +170,21 @@ create policy "quizzes: owner" on public.quizzes
   );
 
 -- Attempts (owner-only)
+drop policy if exists "attempts: owner" on public.attempts;
 create policy "attempts: owner" on public.attempts
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- Chat (owner-only)
+drop policy if exists "chat: owner" on public.chat_messages;
 create policy "chat: owner" on public.chat_messages
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- Progress (owner-only)
+drop policy if exists "progress: owner" on public.progress;
 create policy "progress: owner" on public.progress
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- Client goals (owner-only)
+drop policy if exists "client_goals: owner" on public.client_goals;
 create policy "client_goals: owner" on public.client_goals
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
