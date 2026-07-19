@@ -77,36 +77,36 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="mt-6 grid grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-3 gap-3">
         {stats.map((s) => (
-          <div key={s.label} className="card p-4">
-            <Icon name={s.icon} size={22} className="text-forest-200 dark:text-moss-50" />
-            <div className="mt-1 font-display text-3xl text-forest-200 dark:text-moss-50">
+          <div key={s.label} className="card p-3">
+            <Icon name={s.icon} size={18} className="text-forest-200 dark:text-moss-50" />
+            <div className="mt-1 font-display text-2xl text-forest-200 dark:text-moss-50">
               {s.value}
             </div>
-            <div className="text-sm text-bark-50 dark:text-cream-300">{s.label}</div>
+            <div className="text-xs text-bark-50 dark:text-cream-300">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Your rank */}
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 card p-5">
-        <div className="flex items-center gap-3">
-          <Icon name={me.tier.icon as IconName} size={26} className="text-amber-100 shrink-0" />
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 card p-4">
+        <div className="flex items-center gap-2.5">
+          <Icon name={me.tier.icon as IconName} size={20} className="text-amber-100 shrink-0" />
           <div>
-            <div className="text-lg font-semibold">{me.tier.name}</div>
-            <div className="text-sm text-bark-50 dark:text-cream-300">
+            <div className="text-base font-semibold">{me.tier.name}</div>
+            <div className="text-xs text-bark-50 dark:text-cream-300">
               {user.points ?? 0} points
               {me.next ? ` · ${me.toNext} to ${me.next.name}` : ""}
             </div>
           </div>
         </div>
-        <Link href="/leaderboard" className="btn-ghost">
-          View leaderboard <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
+        <Link href="/leaderboard" className="btn-ghost text-xs">
+          Leaderboard <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
         </Link>
       </div>
 
-      <div className="mt-9 grid gap-8 lg:grid-cols-3 lg:gap-0">
+      <div className="mt-9 grid gap-8 lg:grid-cols-3 lg:gap-0 lg:min-h-screen">
         {/* Main column */}
         <div className="space-y-9 lg:col-span-2 lg:pr-8">
           {/* Goals */}
@@ -206,8 +206,10 @@ export default async function DashboardPage() {
                       className="card flex items-center justify-between gap-3 p-3.5 hover:shadow-lift hover-lift"
                     >
                       <div className="min-w-0">
-                        <div className="truncate text-sm font-semibold">{meta.title}</div>
-                        <div className="truncate text-xs text-bark-50 dark:text-cream-300">
+                        <div className="break-words text-sm font-semibold leading-snug">
+                          {meta.title}
+                        </div>
+                        <div className="break-words text-xs leading-snug text-bark-50 dark:text-cream-300">
                           {meta.courseTitle}
                         </div>
                       </div>
@@ -221,8 +223,11 @@ export default async function DashboardPage() {
                 })}
                 {reviews.length === 0 && (
                   <div className="card flex items-center gap-3 p-4 text-sm text-bark-100 dark:text-cream-200">
-                    <Icon name="leaf" size={22} className="text-moss-100 dark:text-moss-50" />
-                    Flag lessons from <span className="font-medium">Review</span> to fill this in.
+                    <Icon name="leaf" size={22} className="shrink-0 text-moss-100 dark:text-moss-50" />
+                    <span>
+                      Flag lessons on the <span className="font-medium">Review</span> page to
+                      fill this in.
+                    </span>
                   </div>
                 )}
                 {reviews.length > 0 && (
@@ -284,6 +289,48 @@ export default async function DashboardPage() {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Personal goals (set in the main dashboard's Goals section) */}
+          <div>
+            <h2 className="mb-3 text-2xl">Personal goal</h2>
+            {clientInitial.length === 0 ? (
+              <div className="card p-4 text-sm text-bark-100 dark:text-cream-200">
+                Set a personal goal in the main dashboard to track it here.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {clientInitial.map((g) => (
+                  <div key={g.id} className="card p-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="min-w-0 break-words text-sm font-semibold leading-snug">
+                        {g.title}
+                      </span>
+                      {g.complete && (
+                        <Icon
+                          name="check"
+                          size={14}
+                          className="mt-0.5 shrink-0 text-forest-200 dark:text-moss-50"
+                        />
+                      )}
+                    </div>
+                    <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-cream-200 dark:bg-forest-400">
+                      <div
+                        className={`h-full rounded-full ${
+                          g.complete ? "bg-forest-200 dark:bg-moss-50" : "bg-amber-100"
+                        }`}
+                        style={{ width: `${g.pct}%` }}
+                      />
+                    </div>
+                    <div className="mt-1 text-xs text-bark-50 dark:text-cream-300">
+                      {g.complete
+                        ? "Completed"
+                        : `${g.current} / ${g.target} ${metricNoun(g.metric)}`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <FriendsPanel
