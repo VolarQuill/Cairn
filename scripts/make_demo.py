@@ -405,7 +405,7 @@ def scene_outro(i, n):
     text_center(d, W // 2, 300, "Cairn", bold(84), BARK)
     text_center(d, W // 2, 400, "Build your path. Stack your knowledge.", ital(34), FOREST)
     text_center(d, W // 2, 470, "AI-powered learning that actually sticks.", reg(26), BARK100)
-    text_center(d, W // 2, 560, " July AI Challenge", reg(22), BARK50)
+    text_center(d, W // 2, 560, "Cairn", reg(22), BARK50)
     return img
 
 # ---------------------------------------------------------------- timeline

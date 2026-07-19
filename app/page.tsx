@@ -267,7 +267,7 @@ export default async function Landing() {
       <footer className="border-t border-cream-300 dark:border-forest-200/30">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-7 text-sm text-bark-50 dark:text-cream-300 sm:flex-row">
           <Logo size={26} />
-          <p>Cairn — an AI learning companion. </p>
+          <p>Cairn — an AI learning companion.</p>
           <a href="https://github.com" className="hover:text-terracotta-100 dark:hover:text-terracotta-50">
             View source <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
           </a>
