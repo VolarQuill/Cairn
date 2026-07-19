@@ -12,6 +12,7 @@ import type {
   Mastery,
   Goal,
   GoalMetric,
+  Difficulty,
   Friend,
   Review,
   UserSearch,
@@ -116,7 +117,11 @@ export interface Database {
     title: string;
     metric: GoalMetric;
     target: number;
+    difficulty?: Difficulty;
+    course_id?: string | null;
   }): Promise<Goal>;
+  /** Mark a client goal done/undone (explicit completion). */
+  setClientGoalDone(id: string, user_id: string, done: boolean): Promise<Goal>;
   deleteClientGoal(id: string, user_id: string): Promise<void>;
 
   // ---- friends (mutual; stored as two directed rows) ----

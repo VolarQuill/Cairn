@@ -74,7 +74,10 @@ export function progressFor(goal: Goal, current: number): GoalWithProgress {
     current,
     target,
     pct,
-    complete: current >= target,
+    // Server goals complete on activity; client (personal) goals complete only
+    // when the user explicitly marks them done — never auto-derived from
+    // cumulative activity, which would mark brand-new goals "complete".
+    complete: goal.kind === "client" ? Boolean(goal.done) : current >= target,
     awarded: false,
   };
 }

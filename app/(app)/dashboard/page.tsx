@@ -5,7 +5,7 @@ import { CourseCard } from "@/components/CourseCard";
 import { Logo } from "@/components/Logo";
 import { Icon, type IconName } from "@/components/icons";
 import { rankForPoints } from "@/lib/ranks";
-import { ClientGoals } from "@/components/ClientGoals";
+import { PersonalGoals } from "@/components/PersonalGoals";
 import { FriendsPanel } from "@/components/FriendsPanel";
 import { dailyServerGoal, progressFor, activityTotal } from "@/lib/goals";
 import type { GoalMetric, GoalWithProgress } from "@/lib/types";
@@ -58,6 +58,7 @@ export default async function DashboardPage() {
   ];
 
   const recent = courses.slice(0, 6);
+  const courseChoices = courses.map((c) => ({ id: c.id, title: c.title }));
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8">
@@ -112,9 +113,8 @@ export default async function DashboardPage() {
           {/* Goals */}
           <div>
             <h2 className="mb-3 text-2xl">Goals</h2>
-            <div className="grid gap-6 lg:grid-cols-2">
-              {/* Today's server-set challenge */}
-              <div className="card flex flex-col p-5">
+            {/* Today's server-set challenge */}
+            <div className="card flex flex-col p-5">
                 <div className="flex items-center justify-between gap-2">
                   <span className="rounded-full bg-amber-100/15 px-2.5 py-1 text-xs font-medium text-amber-100">
                     Set by Cairn
@@ -156,10 +156,6 @@ export default async function DashboardPage() {
                   )}
                 </div>
               </div>
-
-              {/* Personal, client-set goals (no points) */}
-              <ClientGoals initial={clientInitial} />
-            </div>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">
@@ -291,47 +287,8 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Personal goals (set in the main dashboard's Goals section) */}
-          <div>
-            <h2 className="mb-3 text-2xl">Personal goal</h2>
-            {clientInitial.length === 0 ? (
-              <div className="card p-4 text-sm text-bark-100 dark:text-cream-200">
-                Set a personal goal in the main dashboard to track it here.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {clientInitial.map((g) => (
-                  <div key={g.id} className="card p-4">
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="min-w-0 break-words text-sm font-semibold leading-snug">
-                        {g.title}
-                      </span>
-                      {g.complete && (
-                        <Icon
-                          name="check"
-                          size={14}
-                          className="mt-0.5 shrink-0 text-forest-200 dark:text-moss-50"
-                        />
-                      )}
-                    </div>
-                    <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-cream-200 dark:bg-forest-400">
-                      <div
-                        className={`h-full rounded-full ${
-                          g.complete ? "bg-forest-200 dark:bg-moss-50" : "bg-amber-100"
-                        }`}
-                        style={{ width: `${g.pct}%` }}
-                      />
-                    </div>
-                    <div className="mt-1 text-xs text-bark-50 dark:text-cream-300">
-                      {g.complete
-                        ? "Completed"
-                        : `${g.current} / ${g.target} ${metricNoun(g.metric)}`}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Personal goals — created and shown only here in the side dashboard */}
+          <PersonalGoals initial={clientInitial} courses={courseChoices} />
 
           <FriendsPanel
             initial={friends}

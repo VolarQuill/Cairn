@@ -6,7 +6,7 @@ import {
   progressFor,
   activityTotal,
 } from "@/lib/goals";
-import type { GoalMetric, GoalWithProgress } from "@/lib/types";
+import type { Difficulty, GoalMetric, GoalWithProgress } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -41,17 +41,38 @@ export const POST = guard(async (req: Request) => {
   const user = await getSessionUser();
   if (!user) throw new Error("UNAUTHENTICATED");
   const body = await req.json().catch(() => ({}));
+  const db = await getDb();
+
+  // Mark a client goal done (the "Complete goal" button).
+  if (body.id) {
+    const goal = await db.setClientGoalDone(
+      String(body.id),
+      user.id,
+      body.done === undefined ? true : Boolean(body.done)
+    );
+    return json({ goal });
+  }
+
+  // Create a new client (personal) goal.
   const title = String(body.title ?? "").trim();
   const metric = String(body.metric ?? "") as GoalMetric;
   const target = Math.max(1, Math.floor(Number(body.target) || 0));
+  const difficulty = (String(body.difficulty ?? "medium") as Difficulty);
+  const course_id = body.course_id ? String(body.course_id) : null;
   const valid: GoalMetric[] = ["quiz_questions", "quizzes", "lessons", "courses"];
 
   if (!title) return fail("Give your goal a title.");
   if (!valid.includes(metric)) return fail("Pick a valid metric.");
   if (!target) return fail("Set a target of at least 1.");
 
-  const db = await getDb();
-  const goal = await db.createClientGoal({ user_id: user.id, title, metric, target });
+  const goal = await db.createClientGoal({
+    user_id: user.id,
+    title,
+    metric,
+    target,
+    difficulty,
+    course_id,
+  });
   const cur = await activityTotal(db, user.id, goal.metric);
   return json({ goal: progressFor(goal, cur) }, 201);
 });

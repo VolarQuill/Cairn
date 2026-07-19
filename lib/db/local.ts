@@ -406,9 +406,22 @@ export function createLocalDb(): Database {
           points: 0, // personal goals never award points
           owner_id: input.user_id,
           created_at: nowISO(),
+          difficulty: input.difficulty ?? "medium",
+          course_id: input.course_id ?? null,
+          done: false,
         };
         s.clientGoals.push(g);
         return g;
+      });
+    },
+    async setClientGoalDone(id, userId, done) {
+      return withWrite((s) => {
+        const g = s.clientGoals.find(
+          (x) => x.id === id && x.owner_id === userId
+        );
+        if (!g) throw new Error("goal not found");
+        g.done = done;
+        return { ...g };
       });
     },
     async deleteClientGoal(id, userId) {

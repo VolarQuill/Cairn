@@ -16,6 +16,7 @@ import type {
   Friend,
   Review,
   UserSearch,
+  Difficulty,
 } from "@/lib/types";
 import { env } from "@/lib/util";
 
@@ -540,6 +541,9 @@ export function createSupabaseDb(): DbInterface {
         points: 0,
         owner_id: r.user_id,
         created_at: r.created_at,
+        difficulty: (r.difficulty ?? "medium") as Difficulty,
+        course_id: r.course_id ?? null,
+        done: Boolean(r.done),
       }));
     },
     async createClientGoal(input) {
@@ -551,6 +555,8 @@ export function createSupabaseDb(): DbInterface {
           title: input.title,
           metric: input.metric,
           target: input.target,
+          difficulty: input.difficulty ?? "medium",
+          course_id: input.course_id ?? null,
           created_at: new Date().toISOString(),
         })
         .select()
@@ -565,6 +571,32 @@ export function createSupabaseDb(): DbInterface {
         points: 0,
         owner_id: data.user_id,
         created_at: data.created_at,
+        difficulty: (data.difficulty ?? "medium") as Difficulty,
+        course_id: data.course_id ?? null,
+        done: Boolean(data.done),
+      };
+    },
+    async setClientGoalDone(id, userId, done) {
+      const { data, error } = await sb()
+        .from("client_goals")
+        .update({ done })
+        .eq("id", id)
+        .eq("user_id", userId)
+        .select()
+        .single();
+      if (error) throw new Error(error.message);
+      return {
+        id: data.id,
+        kind: "client",
+        title: data.title,
+        metric: data.metric,
+        target: data.target ?? 1,
+        points: 0,
+        owner_id: data.user_id,
+        created_at: data.created_at,
+        difficulty: (data.difficulty ?? "medium") as Difficulty,
+        course_id: data.course_id ?? null,
+        done: Boolean(data.done),
       };
     },
     async deleteClientGoal(id, userId) {

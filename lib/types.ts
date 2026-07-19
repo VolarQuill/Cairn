@@ -107,6 +107,8 @@ export interface Progress {
 
 export type GoalMetric = "quiz_questions" | "quizzes" | "lessons" | "courses";
 
+export type Difficulty = "easy" | "medium" | "hard";
+
 export interface Goal {
   id: string;
   kind: "server" | "client";
@@ -118,6 +120,11 @@ export interface Goal {
   points: number;
   owner_id?: string | null; // set for client goals
   created_at?: string;
+  // client-goal extras
+  difficulty?: Difficulty;
+  course_id?: string | null;
+  /** Explicitly marked done by the user (client goals only). */
+  done?: boolean;
 }
 
 /** A Goal with its live progress filled in for display. */

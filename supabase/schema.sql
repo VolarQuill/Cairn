@@ -133,6 +133,10 @@ create table if not exists public.client_goals (
   created_at timestamptz not null default now()
 );
 create index if not exists client_goals_user_idx on public.client_goals (user_id, created_at desc);
+-- Personal-goal extras (added after launch; safe to re-run).
+alter table public.client_goals add column if not exists difficulty text not null default 'medium';
+alter table public.client_goals add column if not exists course_id text;
+alter table public.client_goals add column if not exists done boolean not null default false;
 
 -- ---------- Row Level Security ----------
 alter table public.profiles      enable row level security;
