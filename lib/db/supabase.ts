@@ -13,6 +13,8 @@ import type {
   Level,
   SourceType,
   Goal,
+  Friend,
+  Review,
 } from "@/lib/types";
 import { env } from "@/lib/util";
 
@@ -562,6 +564,100 @@ export function createSupabaseDb(): DbInterface {
     async deleteClientGoal(id, userId) {
       const { error } = await sb()
         .from("client_goals")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId);
+      if (error) throw new Error(error.message);
+    },
+
+    // ---- friends ----
+    async listFriends(userId) {
+      const { data: links, error: le } = await sb()
+        .from("friends")
+        .select("friend_id")
+        .eq("user_id", userId);
+      if (le) throw new Error(le.message);
+      const ids = (links ?? []).map((l: any) => l.friend_id as string);
+      if (ids.length === 0) return [];
+      const { data, error } = await sb()
+        .from("profiles")
+        .select("id,name,email,points")
+        .in("id", ids);
+      if (error) throw new Error(error.message);
+      return (data ?? [])
+        .map(
+          (r: any): Friend => ({
+            id: r.id,
+            name: r.name,
+            email: r.email,
+            points: r.points ?? 0,
+          })
+        )
+        .sort((a: Friend, b: Friend) => b.points - a.points);
+    },
+    async addFriend(userId, friendId) {
+      const rows = [
+        { user_id: userId, friend_id: friendId },
+        { user_id: friendId, friend_id: userId },
+      ];
+      const { error } = await sb().from("friends").insert(rows);
+      if (error) throw new Error(error.message);
+    },
+    async removeFriend(userId, friendId) {
+      const { error } = await sb()
+        .from("friends")
+        .delete()
+        .or(
+          `and(user_id.eq.${userId},friend_id.eq.${friendId}),and(user_id.eq.${friendId},friend_id.eq.${userId})`
+        );
+      if (error) throw new Error(error.message);
+    },
+
+    // ---- reviews ----
+    async listReviews(userId) {
+      const { data, error } = await sb()
+        .from("reviews")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: true });
+      if (error) throw new Error(error.message);
+      return (data ?? []).map(
+        (r: any): Review => ({
+          id: r.id,
+          user_id: r.user_id,
+          lesson_id: r.lesson_id,
+          course_id: r.course_id,
+          created_at: r.created_at,
+        })
+      );
+    },
+    async addReview(userId, lessonId, courseId) {
+      const { data, error } = await sb()
+        .from("reviews")
+        .upsert(
+          {
+            id: randomUUID(),
+            user_id: userId,
+            lesson_id: lessonId,
+            course_id: courseId,
+            created_at: new Date().toISOString(),
+          },
+          { onConflict: "user_id,lesson_id" }
+        )
+        .select()
+        .single();
+      if (error) throw new Error(error.message);
+      return {
+        id: data.id,
+        user_id: data.user_id,
+        lesson_id: data.lesson_id,
+        course_id: data.course_id,
+        created_at: data.created_at,
+      };
+    },
+    async removeReview(id, userId) {
+      const { error } = await sb()
+        .from("reviews")
         .delete()
         .eq("id", id)
         .eq("user_id", userId);

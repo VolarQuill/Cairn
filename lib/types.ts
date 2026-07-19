@@ -136,6 +136,27 @@ export interface ChatMessage {
   created_at: string;
 }
 
+// ---- Friends ----
+// A mutual friendship is stored as two directed rows (A->B and B->A) so each
+// side sees the other. `Friend` is the *other* person's profile.
+export interface Friend {
+  id: string; // friend user id
+  name: string;
+  email: string;
+  points: number;
+}
+
+// ---- Reviews ----
+// A lesson the user has flagged "needs review" from the Review page. These
+// populate the dashboard's "Needs review" panel.
+export interface Review {
+  id: string;
+  user_id: string;
+  lesson_id: string;
+  course_id: string;
+  created_at: string;
+}
+
 // ---- Generated payloads from the AI layer (pre-persistence shapes) ----
 
 export interface GeneratedLesson {

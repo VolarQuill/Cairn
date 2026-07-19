@@ -12,6 +12,8 @@ import type {
   Mastery,
   Goal,
   GoalMetric,
+  Friend,
+  Review,
 } from "@/lib/types";
 import { dataBackend } from "@/lib/util";
 
@@ -114,6 +116,23 @@ export interface Database {
     target: number;
   }): Promise<Goal>;
   deleteClientGoal(id: string, user_id: string): Promise<void>;
+
+  // ---- friends (mutual; stored as two directed rows) ----
+  /** Other users this user is friends with (their profiles). */
+  listFriends(user_id: string): Promise<Friend[]>;
+  /** Adds a mutual friendship (idempotent). */
+  addFriend(user_id: string, friend_id: string): Promise<void>;
+  /** Removes a mutual friendship. */
+  removeFriend(user_id: string, friend_id: string): Promise<void>;
+
+  // ---- reviews (lessons flagged "needs review") ----
+  listReviews(user_id: string): Promise<Review[]>;
+  addReview(
+    user_id: string,
+    lesson_id: string,
+    course_id: string
+  ): Promise<Review>;
+  removeReview(id: string, user_id: string): Promise<void>;
 }
 
 let cached: Database | null = null;

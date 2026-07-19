@@ -188,3 +188,33 @@ create policy "progress: owner" on public.progress
 drop policy if exists "client_goals: owner" on public.client_goals;
 create policy "client_goals: owner" on public.client_goals
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- ---------- friends (mutual; stored as two directed rows) ----------
+-- A friendship is two rows (A->B and B->A). Either party may view or manage
+-- the link, so the policy permits both directions.
+create table if not exists public.friends (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  friend_id uuid not null references auth.users (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (user_id, friend_id)
+);
+create index if not exists friends_user_idx on public.friends (user_id);
+alter table public.friends enable row level security;
+create policy "friends: mutual" on public.friends
+  for all
+  using (auth.uid() = user_id or auth.uid() = friend_id)
+  with check (auth.uid() = user_id or auth.uid() = friend_id);
+
+-- ---------- reviews (lessons flagged "needs review") ----------
+create table if not exists public.reviews (
+  id text primary key,
+  user_id uuid not null references auth.users (id) on delete cascade,
+  lesson_id text not null,
+  course_id text not null,
+  created_at timestamptz not null default now(),
+  unique (user_id, lesson_id)
+);
+create index if not exists reviews_user_idx on public.reviews (user_id);
+alter table public.reviews enable row level security;
+create policy "reviews: owner" on public.reviews
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

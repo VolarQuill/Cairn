@@ -11,6 +11,7 @@ import { rankForPoints } from "@/lib/ranks";
 const NAV: { href: string; label: string; icon: IconName }[] = [
   { href: "/dashboard", label: "Dashboard", icon: "home" },
   { href: "/library", label: "Library", icon: "books" },
+  { href: "/review", label: "Review", icon: "repeat" },
   { href: "/leaderboard", label: "Leaderboard", icon: "target" },
   { href: "/create", label: "New course", icon: "plus" },
   { href: "/settings", label: "Settings", icon: "gear" },

@@ -11,8 +11,15 @@ import type {
   User,
   Mastery,
   Goal,
+  Review,
 } from "@/lib/types";
 import { nowISO, uid, inMinutes, env } from "@/lib/util";
+
+interface FriendRow {
+  user_id: string;
+  friend_id: string;
+  created_at: string;
+}
 
 interface Store {
   users: User[];
@@ -23,6 +30,8 @@ interface Store {
   chat: ChatMessage[];
   progress: Progress[];
   clientGoals: Goal[];
+  friends: FriendRow[];
+  reviews: Review[];
 }
 
 const DATA_FILE =
@@ -46,6 +55,8 @@ async function load(): Promise<Store> {
       chat: [],
       progress: [],
       clientGoals: [],
+      friends: [],
+      reviews: [],
     };
   }
   // ensure all arrays exist (forward-compat for older files)
@@ -58,6 +69,8 @@ async function load(): Promise<Store> {
     "chat",
     "progress",
     "clientGoals",
+    "friends",
+    "reviews",
   ] as const) {
     if (!Array.isArray((cache as any)[k])) (cache as any)[k] = [];
   }
@@ -400,6 +413,80 @@ export function createLocalDb(): Database {
       return withWrite((s) => {
         s.clientGoals = s.clientGoals.filter(
           (g) => !(g.id === id && g.owner_id === userId)
+        );
+      });
+    },
+
+    // ---- friends ----
+    async listFriends(userId) {
+      const s = await load();
+      const ids = s.friends
+        .filter((f) => f.user_id === userId)
+        .map((f) => f.friend_id);
+      return ids
+        .map((fid) => s.users.find((u) => u.id === fid))
+        .filter((u): u is User => Boolean(u))
+        .map((u) => ({
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          points: u.points ?? 0,
+        }))
+        .sort((a, b) => b.points - a.points);
+    },
+    async addFriend(userId, friendId) {
+      return withWrite((s) => {
+        const pair = (a: string, b: string) =>
+          s.friends.find((f) => f.user_id === a && f.friend_id === b);
+        const exists =
+          pair(userId, friendId) || pair(friendId, userId);
+        if (!exists) {
+          const t = nowISO();
+          s.friends.push({ user_id: userId, friend_id: friendId, created_at: t });
+          s.friends.push({ user_id: friendId, friend_id: userId, created_at: t });
+        }
+      });
+    },
+    async removeFriend(userId, friendId) {
+      return withWrite((s) => {
+        s.friends = s.friends.filter(
+          (f) =>
+            !(
+              (f.user_id === userId && f.friend_id === friendId) ||
+              (f.user_id === friendId && f.friend_id === userId)
+            )
+        );
+      });
+    },
+
+    // ---- reviews ----
+    async listReviews(userId) {
+      const s = await load();
+      return s.reviews
+        .filter((r) => r.user_id === userId)
+        .sort((a, b) => a.created_at.localeCompare(b.created_at));
+    },
+    async addReview(userId, lessonId, courseId) {
+      return withWrite((s) => {
+        const existing = s.reviews.find(
+          (r) => r.user_id === userId && r.lesson_id === lessonId
+        );
+        if (existing) return existing;
+        const r: Review = {
+          id: uid("rev"),
+          user_id: userId,
+          lesson_id: lessonId,
+          course_id: courseId,
+          created_at: nowISO(),
+        };
+        s.reviews.push(r);
+        return r;
+      });
+    },
+    async removeReview(id, userId) {
+      return withWrite((s) => {
+        s.reviews = s.reviews.filter(
+          (r) => !(r.id === id && r.user_id === userId)
         );
       });
     },
