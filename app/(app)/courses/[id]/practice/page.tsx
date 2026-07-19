@@ -46,6 +46,7 @@ export default async function PracticePage({
             lessons={lessons.map((l) => ({ id: l.id, title: l.title }))}
             initialLessonId={searchParams.lesson}
             triggerLabel="Start quiz"
+            returnHref={searchParams.from === "goal" ? "/dashboard" : undefined}
           />
         </div>
       </div>

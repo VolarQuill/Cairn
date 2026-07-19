@@ -82,17 +82,19 @@ export function PersonalGoals({
     }
   }
 
-  async function complete(g: GoalWithProgress) {
+  // Open the course's practice quiz for this goal (button 1).
+  function startQuiz(g: GoalWithProgress) {
+    if (g.course_id) router.push(`/courses/${g.course_id}/practice?from=goal`);
+  }
+
+  // Mark the goal as complete (button 2) — explicit, never auto-derived.
+  async function markDone(g: GoalWithProgress) {
     const res = await fetch("/api/goals", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: g.id, done: true }),
     });
-    if (res.ok && g.course_id) {
-      router.push(`/courses/${g.course_id}/practice`);
-    } else if (res.ok) {
-      router.refresh();
-    }
+    if (res.ok) router.refresh();
   }
 
   async function remove(id: string) {
@@ -152,14 +154,29 @@ export function PersonalGoals({
                 />
               </div>
               <div className="mt-2 flex items-center gap-2">
-                {!g.done && (
-                  <button
-                    onClick={() => complete(g)}
-                    className="btn-amber flex-1 text-xs"
-                  >
-                    <Icon name="check" className="inline h-3.5 w-3.5 align-middle" /> Complete
-                    goal
-                  </button>
+                {!g.done ? (
+                  <>
+                    {g.course_id && (
+                      <button
+                        onClick={() => startQuiz(g)}
+                        className="btn-amber flex-1 text-xs"
+                        title="Practice this course's quiz"
+                      >
+                        <Icon name="target" className="inline h-3.5 w-3.5 align-middle" /> Complete
+                      </button>
+                    )}
+                    <button
+                      onClick={() => markDone(g)}
+                      className="btn-ghost flex-1 text-xs"
+                      title="Mark this goal as complete"
+                    >
+                      <Icon name="check" className="inline h-3.5 w-3.5 align-middle" /> Mark complete
+                    </button>
+                  </>
+                ) : (
+                  <span className="flex-1 text-xs font-medium text-forest-200 dark:text-moss-50">
+                    <Icon name="check" className="inline h-3.5 w-3.5 align-middle" /> Completed
+                  </span>
                 )}
                 <button
                   onClick={() => remove(g.id)}

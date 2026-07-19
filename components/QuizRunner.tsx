@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Question } from "@/lib/types";
 import { Markdown } from "@/components/Markdown";
 import { Icon } from "@/components/icons";
@@ -17,13 +18,17 @@ export function QuizRunner({
   initialLessonId,
   triggerLabel = "Start quiz",
   triggerClassName = "btn-primary",
+  returnHref,
 }: {
   courseId: string;
   lessons: LessonRef[];
   initialLessonId?: string | null;
   triggerLabel?: string;
   triggerClassName?: string;
+  /** When set, show a "Back to dashboard" button after the quiz that navigates here. */
+  returnHref?: string;
 }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [lessonId, setLessonId] = useState<string | null>(
     initialLessonId ?? null
@@ -332,7 +337,7 @@ export function QuizRunner({
                         +{results.earned} points · total {results.points}
                       </p>
                     ) : null}
-                    <div className="mt-2 flex gap-2">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       <button onClick={() => generate(lessonId)} className="btn-amber">
                         <Icon name="refresh" className="inline h-4 w-4 align-middle" /> Try another
                       </button>
@@ -344,6 +349,17 @@ export function QuizRunner({
                         >
                           Re-study lesson
                         </Link>
+                      )}
+                      {returnHref && (
+                        <button
+                          onClick={() => {
+                            setOpen(false);
+                            router.push(returnHref);
+                          }}
+                          className="btn-primary ml-auto"
+                        >
+                          <Icon name="arrow-right" className="inline h-4 w-4 align-middle" /> Back to dashboard
+                        </button>
                       )}
                     </div>
                   </div>
