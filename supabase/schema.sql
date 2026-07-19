@@ -11,8 +11,10 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   email text not null,
   name text not null default 'Learner',
+  points integer not null default 0,
   created_at timestamptz not null default now()
 );
+create index if not exists profiles_points_idx on public.profiles (points desc);
 create index if not exists profiles_email_idx on public.profiles (email);
 
 -- Auto-create a profile row when a Supabase auth user is created.

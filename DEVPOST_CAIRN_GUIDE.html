@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cairn · Devpost Submission Crafting Guide</title>
+<style>
+  :root{
+    --forest-300:#3c6e57; --forest-400:#2f5743; --forest-200:#5a8c72;
+    --bark-300:#4a3f33; --bark-100:#7c6f5e; --bark-50:#a89c89;
+    --cream-50:#f7f1e6; --cream-100:#efe6d4; --cream-200:#e2d4ba;
+    --amber-100:#f0a830; --amber-50:#f6c66b; --terracotta-100:#d9663f; --terracotta-50:#e8895f;
+    --moss-100:#7fae6a;
+    --ink:#241f17; --paper:#fbf7ee;
+    --shadow:0 10px 30px rgba(40,33,22,.12);
+    --radius:18px;
+    font-synthesis:none;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(240,168,48,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(60,110,87,.14), transparent 55%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+    line-height:1.6;
+  }
+  .sans{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+  /* progress bar */
+  #progress{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--amber-100),var(--terracotta-100));z-index:50;transition:width .15s}
+  /* sticky nav */
+  nav{
+    position:sticky;top:0;z-index:40;
+    backdrop-filter:blur(10px);
+    background:rgba(251,247,238,.82);
+    border-bottom:1px solid rgba(124,111,94,.18);
+    display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;
+    padding:10px 14px;
+  }
+  nav a{
+    text-decoration:none;color:var(--bark-100);font-size:13px;font-weight:600;
+    padding:6px 11px;border-radius:999px;transition:.15s;white-space:nowrap;
+  }
+  nav a:hover{background:var(--cream-200);color:var(--forest-400)}
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 90px}
+
+  /* hero */
+  header.hero{
+    position:relative;overflow:hidden;
+    margin:26px 0 8px;border-radius:26px;
+    padding:54px 38px 46px;color:var(--cream-50);
+    background:
+      radial-gradient(700px 300px at 88% 0%, rgba(246,198,107,.28), transparent 60%),
+      linear-gradient(135deg,var(--forest-400),var(--forest-300) 70%,var(--forest-200));
+    box-shadow:var(--shadow);
+  }
+  header.hero:before{
+    content:"";position:absolute;inset:0;opacity:.5;
+    background-image:radial-gradient(circle at 12px 12px, rgba(255,255,255,.05) 2px, transparent 2px);
+    background-size:26px 26px;
+  }
+  .cairn-mark{display:flex;gap:5px;margin-bottom:18px}
+  .cairn-mark span{display:block;background:linear-gradient(180deg,var(--cream-100),var(--amber-50));border-radius:5px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+  .cairn-mark span:nth-child(1){width:54px;height:12px}
+  .cairn-mark span:nth-child(2){width:38px;height:12px;margin:0 8px}
+  .cairn-mark span:nth-child(3){width:20px;height:12px}
+  header.hero h1{font-size:54px;line-height:1;margin:0 0 6px;letter-spacing:-.5px;font-weight:800;position:relative}
+  header.hero .grad{background:linear-gradient(90deg,var(--amber-50),var(--terracotta-50));-webkit-background-clip:text;background-clip:text;color:transparent}
+  header.hero p.sub{font-size:19px;max-width:620px;margin:10px 0 0;color:var(--cream-100);position:relative}
+  .pill{display:inline-flex;align-items:center;gap:7px;margin-top:20px;padding:7px 14px;border-radius:999px;background:rgba(247,241,230,.14);border:1px solid rgba(247,241,230,.25);font-size:13px;font-weight:600;letter-spacing:.3px;position:relative}
+  .pill b{color:var(--amber-50)}
+
+  /* section cards */
+  section.card{
+    background:#fff;border:1px solid rgba(124,111,94,.16);border-radius:var(--radius);
+    padding:26px 28px;margin:22px 0;box-shadow:var(--shadow);position:relative;
+  }
+  section.card > .num{
+    position:absolute;top:-14px;left:24px;width:30px;height:30px;border-radius:50%;
+    background:linear-gradient(135deg,var(--amber-100),var(--terracotta-100));
+    color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;
+    font-size:14px;box-shadow:0 6px 14px rgba(217,102,63,.35);
+  }
+  h2{font-size:26px;margin:6px 0 4px;color:var(--forest-400)}
+  h3{font-size:16px;margin:22px 0 8px;color:var(--bark-300);text-transform:uppercase;letter-spacing:.6px;font-size:13px}
+  .tip{background:linear-gradient(180deg,#fffdf6,#fbf3e1);border-left:4px solid var(--amber-100);padding:12px 16px;border-radius:10px;color:var(--bark-300);font-size:14.5px;margin:14px 0}
+  .tip b{color:var(--terracotta-100)}
+
+  /* copy box */
+  .copy{position:relative;background:var(--ink);color:#f3ead7;border-radius:12px;padding:16px 18px;margin:6px 0;font-size:15px;white-space:pre-wrap;overflow:auto;border:1px solid #000}
+  .copy .hl{color:var(--amber-50);font-weight:700}
+  .copybtn{
+    position:absolute;top:8px;right:8px;border:0;cursor:pointer;
+    background:var(--amber-100);color:#3a2a10;font-weight:700;font-size:12px;
+    padding:5px 10px;border-radius:8px;transition:.15s;font-family:inherit;
+  }
+  .copybtn:hover{background:var(--amber-50)}
+  .copybtn.done{background:var(--moss-100);color:#1d2a16}
+
+  /* checklist */
+  ul.check{list-style:none;padding:0;margin:10px 0}
+  ul.check li{position:relative;padding:7px 0 7px 34px;font-size:15px;border-bottom:1px dashed rgba(124,111,94,.18)}
+  ul.check li:last-child{border-bottom:0}
+  ul.check li:before{content:"☐";position:absolute;left:6px;top:6px;font-size:18px;color:var(--bark-100)}
+  ul.check li.done:before{content:"☑";color:var(--moss-100)}
+  .you{color:var(--terracotta-100);font-weight:700}
+  .auto{color:var(--forest-300);font-weight:700}
+
+  /* tier ladder */
+  .ladder{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .tier{flex:1 1 130px;background:linear-gradient(180deg,#fff,#fbf3e1);border:1px solid rgba(124,111,94,.2);border-radius:12px;padding:12px;text-align:center}
+  .tier .ic{font-size:22px}
+  .tier .nm{font-weight:800;color:var(--forest-400);font-size:14px;margin-top:4px}
+  .tier .pt{font-size:12px;color:var(--bark-100)}
+
+  /* built-with chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .chip{background:var(--forest-400);color:var(--cream-50);padding:6px 13px;border-radius:999px;font-size:13px;font-weight:600;font-family:ui-sans-serif,system-ui,sans-serif}
+
+  /* final preflight */
+  .preflight{background:linear-gradient(135deg,var(--forest-400),var(--forest-300));color:var(--cream-50);border:0}
+  .preflight h2{color:var(--cream-50)}
+  .preflight ul.check li{color:var(--cream-100);border-color:rgba(247,241,230,.18)}
+  .preflight ul.check li:before{color:var(--cream-100)}
+
+  footer{text-align:center;color:var(--bark-50);font-size:13px;margin-top:30px}
+  .kicker{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--terracotta-100);font-weight:700}
+  @media (max-width:620px){header.hero h1{font-size:40px} .wrap{padding:0 12px 60px}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="sans">
+  <a href="#start">Start</a>
+  <a href="#name">Name</a>
+  <a href="#tagline">Tagline</a>
+  <a href="#cover">Cover</a>
+  <a href="#video">Video</a>
+  <a href="#story">Story</a>
+  <a href="#built">Built With</a>
+  <a href="#try">Try It</a>
+  <a href="#team">Team</a>
+  <a href="#gallery">Gallery</a>
+  <a href="#preflight">Preflight</a>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="cairn-mark"><span></span><span></span><span></span></div>
+    <div class="kicker" style="color:var(--amber-50)">Devpost Submission · Crafting Guide</div>
+    <h1>Cairn <span class="grad">× Devpost</span></h1>
+    <p class="sub">A fill-in-the-blanks battle plan for your hackathon entry. Every field Devpost asks for is here — with copy-paste-ready text already written for Cairn, and exactly what <span class="you">you</span> still need to drop in.</p>
+    <div class="pill">🏔️ <b>Cairn</b> — a trail marker for your learning. Built &amp; deployed. You just have to submit.</div>
+  </header>
+
+  <!-- START -->
+  <section class="card" id="start">
+    <div class="num">0</div>
+    <div class="kicker">Before you touch Devpost</div>
+    <h2>30 minutes. That's all this takes.</h2>
+    <p>Everything marked <span class="auto">[auto]</span> is already written below — select the grey box and hit <b>Copy</b>, then paste into Devpost. Everything marked <span class="you">[you]</span> needs a link, file, or decision from you. Tick the boxes as you go.</p>
+    <div class="tip"><b>Pro move:</b> Devpost autosaves drafts. Open the submission form, keep this page open side-by-side, and paste field-by-field. Don't publish until the <a href="#preflight">Preflight</a> list is all checked.</div>
+    <ul class="check">
+      <li class="done"><span class="auto">[auto]</span> Live app is deployed → <code>https://cairn-beta-six.vercel.app</code></li>
+      <li class="done"><span class="auto">[auto]</span> Project name, tagline, story copy ready below</li>
+      <li><span class="you">[you]</span> Decide the hackathon + any theme/category track</li>
+      <li><span class="you">[you]</span> Record a ≤3 min demo video and upload to YouTube/Vimeo</li>
+      <li><span class="you">[you]</span> Grab 3–5 screenshots + a 1280×640 cover</li>
+      <li><span class="you">[you]</span> Confirm public repo URL (or mark it private if rules allow)</li>
+    </ul>
+  </section>
+
+  <!-- NAME -->
+  <section class="card" id="name">
+    <div class="num">1</div>
+    <h2>Application name</h2>
+    <div class="tip"><b>Devpost:</b> The title at the top of your project. Short, memorable, one word if you can. Judges see this first.</div>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>Cairn</div>
+    <ul class="check">
+      <li class="done"><span class="auto">[auto]</span> Use <b>Cairn</b> exactly (capital C).</li>
+      <li><span class="you">[you]</span> Optional: add a subtitle on your Devpost page bio, e.g. "Cairn — AI courses that actually stick."</li>
+    </ul>
+  </section>
+
+  <!-- TAGLINE -->
+  <section class="card" id="tagline">
+    <div class="num">2</div>
+    <h2>One-line description (tagline)</h2>
+    <div class="tip"><b>Devpost:</b> ~140 characters. The sentence that shows under your project name across the gallery. Make it do three jobs: <b>what</b> it is, <b>who</b> it's for, <b>why</b> it's different.</div>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>Turn any article, doc, link, or topic into a structured AI course — with distilled lessons, smart quizzes, and a global leaderboard that makes learning stick.</div>
+    <ul class="check">
+      <li class="done"><span class="auto">[auto]</span> Above is 156 chars — trim if Devpost enforces a hard limit.</li>
+      <li><span class="you">[you]</span> Confirm character limit on your hackathon's form.</li>
+    </ul>
+  </section>
+
+  <!-- COVER -->
+  <section class="card" id="cover">
+    <div class="num">3</div>
+    <h2>Cover image</h2>
+    <div class="tip"><b>Devpost:</b> 1280×640 (or 1600×900). This is the thumbnail in the gallery — arguably the single highest-impact asset you'll upload. It should read as "a real product" in one glance.</div>
+    <h3>What makes a winning cover</h3>
+    <ul class="check">
+      <li><span class="you">[you]</span> Use the <b>dashboard + leaderboard</b> side-by-side, or a clean hero of the course view.</li>
+      <li><span class="you">[you]</span> Keep the warm forest/amber palette (it's Cairn's brand — consistency = trust).</li>
+      <li><span class="you">[you]</span> Overlay the tagline in large serif text, top-left.</li>
+      <li><span class="you">[you]</span> Export at exactly 1280×640, PNG, &lt; 5 MB.</li>
+    </ul>
+    <div class="tip"><b>Fastest path:</b> Take a full-page screenshot of <code>cairn-beta-six.vercel.app/dashboard</code>, drop it in Figma/Canva at 1280×640, add the tagline, export. ~10 minutes.</div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="card" id="video">
+    <div class="num">4</div>
+    <h2>Video demo</h2>
+    <div class="tip"><b>Devpost:</b> A YouTube or Vimeo link (most hackathons: ≤3 min, some ≤2). This is where judges decide if you built something real. Show the <b>loop</b>, not the features list.</div>
+    <h3>Shot list (≈2:30, paced)</h3>
+    <ul class="check">
+      <li><span class="you">[you]</span> <b>0:00–0:15</b> The pain: "You read an article, forget it in a week." Show a wall of open tabs.</li>
+      <li><span class="you">[you]</span> <b>0:15–0:45</b> Paste a URL / topic → Cairn generates a course with distilled lessons + Key Takeaways.</li>
+      <li><span class="you">[you]</span> <b>0:45–1:15</b> Take a quiz (switch 10 → 30 questions), show points awarded live.</li>
+      <li><span class="you">[you]</span> <b>1:15–1:45</b> Open the Leaderboard — your tier climbs Seedling → Sapling as points land.</li>
+      <li><span class="you">[you]</span> <b>1:45–2:30</b> Spaced-repetition "Due for review" + dark/light toggle. End on live URL.</li>
+    </ul>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>🎬 Paste your YouTube/Vimeo link here:
+https://youtu.be/XXXXXXXXXXX</div>
+    <ul class="check">
+      <li><span class="you">[you]</span> Caption the video (judges mute sometimes).</li>
+      <li><span class="you">[you]</span> Pin it as "Public — unlisted is fine."</li>
+    </ul>
+  </section>
+
+  <!-- STORY -->
+  <section class="card" id="story">
+    <div class="num">5</div>
+    <h2>The Story (the heart of your entry)</h2>
+    <div class="tip"><b>Devpost:</b> A rich-text editor with suggested sections. Write like a human, not a spec sheet. Each block below is a separate Devpost section — copy each into its matching field. Judges read this top to bottom.</div>
+
+    <h3>Inspiration</h3>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>Learning online breaks in two ways: <span class="hl">passive reading</span> (you forget ~90% within a week) and <span class="hl">rigid courses</span> (you can't start from the article sitting in front of you right now). We built Cairn to collapse the distance between "I just read something interesting" and "I actually know it." The name is a trail cairn — a small stack of stones hikers leave to mark the path so no one gets lost. Cairn marks your learning path.</div>
+
+    <h3>What it does</h3>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>• <span class="hl">Generate:</span> paste an article URL, upload a doc, or type a topic — Cairn's AI turns it into a structured course.
+• <span class="hl">Distill, don't copy:</span> every lesson ends in a Key Takeaway — the core claim in plain language, with the filler stripped out.
+• <span class="hl">Remember:</span> spaced repetition moves lessons from new → due → mastered.
+• <span class="hl">Prove it:</span> quiz yourself with 10 / 20 / 30 / custom questions; harder courses are worth more.
+• <span class="hl">Compete:</span> earn difficulty-scaled points and climb a global leaderboard from Seedling to Cairn Master.</div>
+
+    <h3>How we built it</h3>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>• <span class="hl">Next.js 14</span> (App Router) + TypeScript, with Tailwind for a calm, warm UI.
+• <span class="hl">Supabase</span> (Postgres + Auth + Row-Level Security) stores users, courses, progress, and the leaderboard.
+• A <span class="hl">provider-agnostic AI layer</span> (OpenRouter / Gemini-compatible) distills source material into summarized lessons and generates quizzes — with a graceful offline fallback so the app never hard-fails.
+• Deployed on <span class="hl">Vercel</span>; all scoring lives in one pure ranking module so points stay fair and testable.</div>
+
+    <h3>Challenges we ran into</h3>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>• <span class="hl">Real summarization, not copy-paste.</span> Early AI output just restated the source. We rewrote the distillation prompt and surfaced AI errors live until the lessons read like a human summary.
+• <span class="hl">A dead API key on prod.</span> The app went quiet mid-demo. We added an offline fallback and rotated keys without a redeploy.
+• <span class="hl">Fair difficulty scaling.</span> Beginner vs advanced courses needed points that feel earned — solved with a per-correct × level-multiplier (1× / 1.5× / 2×).</div>
+
+    <h3>Accomplishments that we're proud of</h3>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>• A course generator that respects your time — distilled takeaways, not "restate in your own words" busywork.
+• A points system where an advanced course is genuinely worth more than a beginner one.
+• A <span class="hl">global leaderboard</span> that ranks every user via the service-role client without leaking anyone's private data.</div>
+
+    <h3>What we learned</h3>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>• Summarization quality lives or dies in the prompt — and in validating the output, not trusting it.
+• Cache-busting matters: a stale build cache once hid a feature we'd already shipped.
+• For actual retention, small calm UX beats gamified noise every time.</div>
+
+    <h3>What's next for Cairn</h3>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>• <span class="hl">Public course sharing</span> + community leaderboards.
+• <span class="hl">Richer ingestion:</span> PDF / ePub uploads and YouTube-transcript courses.
+• <span class="hl">Adaptive quizzes</span> that target your weakest lessons automatically.</div>
+
+    <h3>Your tier ladder (drop into "What it does" or a gallery caption)</h3>
+    <div class="ladder">
+      <div class="tier"><div class="ic">🌱</div><div class="nm">Seedling</div><div class="pt">0 pts</div></div>
+      <div class="tier"><div class="ic">🍃</div><div class="nm">Sprout</div><div class="pt">100</div></div>
+      <div class="tier"><div class="ic">🌳</div><div class="nm">Sapling</div><div class="pt">300</div></div>
+      <div class="tier"><div class="ic">📖</div><div class="nm">Scholar</div><div class="pt">700</div></div>
+      <div class="tier"><div class="ic">💡</div><div class="nm">Sage</div><div class="pt">1500</div></div>
+      <div class="tier"><div class="ic">🪨</div><div class="nm">Cairn Master</div><div class="pt">3000</div></div>
+    </div>
+  </section>
+
+  <!-- BUILT WITH -->
+  <section class="card" id="built">
+    <div class="num">6</div>
+    <h2>Built with</h2>
+    <div class="tip"><b>Devpost:</b> A tag autocomplete. Start typing each and pick the matching chip. These feed the tech filters judges use to browse.</div>
+    <div class="chips">
+      <span class="chip">Next.js</span><span class="chip">TypeScript</span><span class="chip">Tailwind CSS</span>
+      <span class="chip">Supabase</span><span class="chip">PostgreSQL</span><span class="chip">Vercel</span>
+      <span class="chip">OpenRouter</span><span class="chip">AI / ML</span>
+    </div>
+    <ul class="check">
+      <li class="done"><span class="auto">[auto]</span> Type each chip above exactly; Devpost will suggest it.</li>
+      <li><span class="you">[you]</span> Add any extra (e.g. "Gemini", "React") only if you actually used it.</li>
+    </ul>
+  </section>
+
+  <!-- TRY IT -->
+  <section class="card" id="try">
+    <div class="num">7</div>
+    <h2>Try it out (links)</h2>
+    <div class="tip"><b>Devpost:</b> A "Website" field + a list of links (GitHub, Devpost, other). The Website should be the live app.</div>
+    <div class="copy"><button class="copybtn" onclick="copy(this)">Copy</button>Website (live app):
+https://cairn-beta-six.vercel.app
+
+Source code:
+https://github.com/VolarQuill/Cairn
+
+Devpost:
+(this page)</div>
+    <ul class="check">
+      <li class="done"><span class="auto">[auto]</span> Live URL is correct and currently up.</li>
+      <li><span class="you">[you]</span> Replace the GitHub URL with your real repo (or mark private if the rules permit).</li>
+      <li><span class="you">[you]</span> If the hackathon requires a public repo at judging time, make sure it's public before the deadline.</li>
+    </ul>
+  </section>
+
+  <!-- TEAM -->
+  <section class="card" id="team">
+    <div class="num">8</div>
+    <h2>Team members</h2>
+    <div class="tip"><b>Devpost:</b> Add each teammate by email/devpost handle. Judges verify everyone listed actually contributed.</div>
+    <ul class="check">
+      <li><span class="you">[you]</span> Add yourself + every contributor.</li>
+      <li><span class="you">[you]</span> Match names to what's on the repo commits, if the hackathon cross-checks.</li>
+    </ul>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="card" id="gallery">
+    <div class="num">9</div>
+    <h2>Gallery (screenshots)</h2>
+    <div class="tip"><b>Devpost:</b> 3–5 images. Judges skim these during scoring. Show the flow, not the logo.</div>
+    <ul class="check">
+      <li><span class="you">[you]</span> 1. Course generation (paste URL → course appears).</li>
+      <li><span class="you">[you]</span> 2. A lesson with its Key Takeaway summary.</li>
+      <li><span class="you">[you]</span> 3. Quiz screen with the 10/20/30/custom selector + live points.</li>
+      <li><span class="you">[you]</span> 4. Leaderboard with your tier + progress bar.</li>
+      <li><span class="you">[you]</span> 5. Dashboard "Due for review" + dark mode.</li>
+    </ul>
+  </section>
+
+  <!-- PREFLIGHT -->
+  <section class="card preflight" id="preflight">
+    <div class="num">✓</div>
+    <h2>Preflight — tick before you hit Publish</h2>
+    <ul class="check">
+      <li>Name = <b>Cairn</b>, tagline pasted.</li>
+      <li>Cover image uploaded at 1280×640.</li>
+      <li>Video link live, captioned, &lt; time limit.</li>
+      <li>All 7 Story sections pasted (Inspiration → What's next).</li>
+      <li>Built-with chips match the list above.</li>
+      <li>Live URL + repo URL in "Try it out."</li>
+      <li>Every teammate added.</li>
+      <li>3–5 gallery screenshots uploaded.</li>
+      <li><span class="you">[you]</span> Hackathon theme/category selected (if applicable).</li>
+      <li><span class="you">[you]</span> Eligibility checkboxes confirmed.</li>
+      <li>Preview the public page once — does it look like a real product? Then Publish. 🏔️</li>
+    </ul>
+  </section>
+
+  <footer class="sans">Cairn · Devpost crafting guide — generated locally. Copy the grey boxes, tick the boxes, submit. Good luck. 🪨</footer>
+</div>
+
+<script>
+  function copy(btn){
+    const box = btn.parentElement;
+    const text = box.innerText.replace(/^Copy\s*/, "");
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent="Copied!"; btn.classList.add("done");
+      setTimeout(()=>{btn.textContent="Copy"; btn.classList.remove("done");},1400);
+    });
+  }
+  // scroll progress bar
+  const bar = document.getElementById("progress");
+  addEventListener("scroll", ()=>{
+    const h = document.documentElement;
+    const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    bar.style.width = (p*100)+"%";
+  });
+</script>
+</body>
+</html>

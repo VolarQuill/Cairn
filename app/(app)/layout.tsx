@@ -8,6 +8,6 @@ export default async function AppLayout({
 }) {
   const user = await requireUser();
   return (
-    <AppShell user={{ name: user.name, email: user.email }}>{children}</AppShell>
+    <AppShell user={{ name: user.name, email: user.email, points: user.points ?? 0 }}>{children}</AppShell>
   );
 }

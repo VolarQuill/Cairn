@@ -6,10 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { Icon, type IconName } from "@/components/icons";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { rankForPoints } from "@/lib/ranks";
 
 const NAV: { href: string; label: string; icon: IconName }[] = [
   { href: "/dashboard", label: "Dashboard", icon: "home" },
   { href: "/library", label: "Library", icon: "books" },
+  { href: "/leaderboard", label: "Leaderboard", icon: "target" },
   { href: "/create", label: "New course", icon: "plus" },
   { href: "/settings", label: "Settings", icon: "gear" },
 ];
@@ -18,12 +20,13 @@ export function AppShell({
   user,
   children,
 }: {
-  user: { name: string; email: string };
+  user: { name: string; email: string; points?: number };
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const me = rankForPoints(user.points ?? 0);
 
   async function signOut() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -85,6 +88,10 @@ export function AppShell({
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-semibold">{user.name}</div>
             <div className="truncate text-xs text-cream-100/60">{user.email}</div>
+            <div className="mt-0.5 flex items-center gap-1 text-xs text-cream-100/70">
+              <Icon name={me.tier.icon as IconName} size={13} className="text-amber-50" />
+              <span>{me.tier.name} · {user.points ?? 0} pts</span>
+            </div>
           </div>
         </div>
         <button

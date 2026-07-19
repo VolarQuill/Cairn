@@ -101,12 +101,14 @@ export function createLocalDb(): Database {
   return {
     async getUserById(id) {
       const s = await load();
-      return s.users.find((u) => u.id === id) ?? null;
+      const u = s.users.find((x) => x.id === id);
+      return u ? { ...u, points: u.points ?? 0 } : null;
     },
     async getUserByEmail(email) {
       const s = await load();
       const e = email.toLowerCase();
-      return s.users.find((u) => u.email.toLowerCase() === e) ?? null;
+      const u = s.users.find((x) => x.email.toLowerCase() === e);
+      return u ? { ...u, points: u.points ?? 0 } : null;
     },
     async createUser(input) {
       return withWrite((s) => {
@@ -115,6 +117,7 @@ export function createLocalDb(): Database {
           email: input.email,
           name: input.name,
           password_hash: input.password_hash ?? null,
+          points: 0,
           created_at: nowISO(),
         };
         s.users.push(user);
@@ -176,6 +179,14 @@ export function createLocalDb(): Database {
         store.quizzes = store.quizzes.filter((q) => q.course_id !== id);
         store.progress = store.progress.filter((p) => p.course_id !== id);
       });
+    },
+
+    async listLeaderboard(limit) {
+      const s = await load();
+      return s.users
+        .map((u) => ({ id: u.id, name: u.name, points: u.points ?? 0 }))
+        .sort((a, b) => b.points - a.points)
+        .slice(0, limit);
     },
 
     async addLessons(course_id, lessons) {

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f5743"/>
+      <stop offset="0.55" stop-color="#3c6e57"/>
+      <stop offset="1" stop-color="#5a8c72"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.5">
+      <stop offset="0" stop-color="#f6c66b" stop-opacity="0.55"/>
+      <stop offset="0.6" stop-color="#f0a830" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#f0a830" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf3e1"/>
+      <stop offset="0.5" stop-color="#f6c66b"/>
+      <stop offset="1" stop-color="#e8895f"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f7f1e6"/>
+      <stop offset="1" stop-color="#f6c66b"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1500" height="1000" fill="url(#bg)"/>
+  <rect width="1500" height="1000" fill="url(#glow)"/>
+
+  <!-- subtle dotted texture -->
+  <g fill="#f7f1e6" opacity="0.05">
+    <circle cx="120" cy="140" r="3"/><circle cx="260" cy="90" r="2"/><circle cx="380" cy="180" r="3"/>
+    <circle cx="1120" cy="120" r="3"/><circle cx="1300" cy="200" r="2"/><circle cx="1380" cy="90" r="3"/>
+    <circle cx="100" cy="860" r="3"/><circle cx="240" cy="920" r="2"/><circle cx="1340" cy="880" r="3"/>
+    <circle cx="1180" cy="910" r="2"/><circle cx="220" cy="500" r="2"/><circle cx="1280" cy="520" r="2"/>
+  </g>
+
+  <!-- kicker -->
+  <text x="750" y="250" text-anchor="middle" fill="#f0a830" font-size="30" letter-spacing="10" font-weight="bold">LEARNING, DISTILLED</text>
+
+  <!-- glow behind mark -->
+  <ellipse cx="750" cy="430" rx="220" ry="200" fill="#f6c66b" opacity="0.35" filter="url(#soft)"/>
+
+  <!-- cairn mark (stacked stones) -->
+  <g>
+    <rect x="660" y="470" width="180" height="56" rx="26" fill="url(#stone)"/>
+    <rect x="690" y="408" width="120" height="56" rx="24" fill="url(#stone)"/>
+    <rect x="720" y="346" width="60"  height="56" rx="22" fill="url(#stone)"/>
+    <!-- stone highlights -->
+    <rect x="666" y="476" width="168" height="14" rx="7" fill="#fffaf0" opacity="0.35"/>
+    <rect x="696" y="414" width="108" height="13" rx="6" fill="#fffaf0" opacity="0.35"/>
+    <rect x="726" y="352" width="48"  height="12" rx="6" fill="#fffaf0" opacity="0.35"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="750" y="690" text-anchor="middle" fill="url(#word)" font-size="160" font-weight="bold" letter-spacing="2">Cairn</text>
+
+  <!-- divider -->
+  <rect x="640" y="720" width="220" height="4" rx="2" fill="#f0a830" opacity="0.8"/>
+
+  <!-- tagline -->
+  <text x="750" y="778" text-anchor="middle" fill="#efe6d4" font-size="34" letter-spacing="1">AI courses that actually stick.</text>
+
+  <!-- feature chips -->
+  <g font-size="22" fill="#f7f1e6" opacity="0.85" text-anchor="middle" letter-spacing="1">
+    <text x="470" y="850">Distilled lessons</text>
+    <text x="750" y="850">Smart quizzes</text>
+    <text x="1030" y="850">Global leaderboard</text>
+  </g>
+  <g stroke="#f0a830" stroke-opacity="0.5" stroke-width="1.5">
+    <line x1="610" y1="828" x2="610" y2="858"/>
+    <line x1="890" y1="828" x2="890" y2="858"/>
+  </g>
+</svg>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
@@ -12,6 +12,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  // 30s cooldown after a failed attempt so the button can't be spammed.
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,11 +33,14 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Sign in failed.");
+      // Navigate and stay in the "Signing in…" state until the page actually
+      // unmounts. router.push is fire-and-forget, so resetting `loading` in a
+      // `finally` here flipped the button back to "Sign in" while the redirect
+      // was still in flight — making a successful login look like a failure.
       router.push("/dashboard");
-      router.refresh();
     } catch (err: any) {
       setError(err.message);
-    } finally {
+      setCooldown(30);
       setLoading(false);
     }
   }
@@ -78,8 +89,8 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
-            <button type="submit" className="btn-amber w-full py-3" disabled={loading}>
-              {loading ? "Signing in…" : "Sign in"}
+            <button type="submit" className="btn-amber w-full py-3" disabled={loading || cooldown > 0}>
+              {loading ? "Signing in…" : cooldown > 0 ? `Wait ${cooldown}s` : "Sign in"}
             </button>
           </form>
           <p className="mt-5 text-center text-sm text-bark-50 dark:text-cream-300">

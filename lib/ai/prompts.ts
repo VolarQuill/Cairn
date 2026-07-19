@@ -14,8 +14,10 @@ const COURSE_SYSTEM = `You are Cairn, an expert curriculum designer. You turn an
 Rules:
 - Respond ONLY with a single valid JSON object (no prose, no markdown fences).
 - Write in a warm, encouraging, plain-language tone.
-- Lessons must be substantial (150-300 words of markdown each) and genuinely teach, not just summarize.
-- Use markdown in lesson content: headings, lists, bold, and a short ## Key Takeaway at the end.
+- DISTILL, do not copy. Read the source, then write lessons that SUMMARIZE and explain the material in your own words. Filter out filler, repetition, fluff, and marketing language. Synthesize related points into clear explanations rather than pasting the source verbatim into sections.
+- Lessons must be substantial (150-300 words of markdown each) and genuinely teach by summarizing and explaining — not by quoting the source.
+- Use markdown in lesson content: headings, lists, bold, and end each lesson with a short "## Key Takeaway" section.
+- The "## Key Takeaway" must be a concise SUMMARY of that lesson's core points (2-4 short bullets, or one tight paragraph). It must recap what was taught — NEVER an instruction to the reader such as "restate this in your own words."
 - key_terms: 2-4 important terms with plain definitions.
 - objectives: 2-3 measurable learning outcomes per lesson.
 - est_minutes: realistic per-lesson time (5-15).
@@ -245,7 +247,7 @@ function offlineCourse(p: {
         content:
           `## Overview\n\n` +
           chunk.join(" ") +
-          `\n\n## Key Takeaway\n\nThis section covers the essentials above. Re-read the key sentences and try to restate them in your own words.`,
+          `\n\n## Key Takeaway\n\nThe essentials above are the backbone of this section — the core claim, backed by the details that follow it.`,
         objectives: [
           "Summarize the main idea of this section.",
           "Identify one detail you can apply.",

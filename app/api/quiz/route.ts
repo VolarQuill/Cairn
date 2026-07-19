@@ -12,7 +12,7 @@ export const POST = guard(async (req: Request) => {
   const body = await req.json().catch(() => ({}));
   const courseId = String(body.courseId ?? "");
   const lessonId = body.lessonId ? String(body.lessonId) : null;
-  const count = Math.min(12, Math.max(3, Number(body.count) || 5));
+  const count = Math.min(30, Math.max(3, Number(body.count) || 10));
   if (!courseId) return fail("courseId is required.");
 
   const db = await getDb();

@@ -6,6 +6,7 @@ import type {
   Progress,
   Quiz,
   User,
+  LeaderboardEntry,
   Level,
   SourceType,
   Mastery,
@@ -28,6 +29,8 @@ export interface Database {
     password_hash?: string | null;
   }): Promise<User>;
   updateUser(id: string, patch: Partial<User>): Promise<User>;
+  /** Top `limit` users by points (global ranking). */
+  listLeaderboard(limit: number): Promise<LeaderboardEntry[]>;
 
   // ---- courses ----
   createCourse(input: {

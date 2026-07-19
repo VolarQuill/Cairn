@@ -1,0 +1,57 @@
+The Science of Learning: Why We Forget and How to Remember
+
+Most of what we learn, we lose. Read a chapter for class, close the book, and within a week you will struggle to recall more than a fraction of it. This is not a personal failing and it is not laziness. Forgetting is the brain's default setting. Memory is not a storage cabinet where facts sit untouched until you need them; it is a living, reconstructive process that decays unless it is actively maintained. The good news is that the same science that explains why we forget also tells us exactly how to remember far more, with far less effort, than most people assume.
+
+The Forgetting Curve
+
+In the 1880s, a German psychologist named Hermann Ebbinghaus ran a series of experiments on himself. He memorized lists of nonsense syllables and then tested how much he retained after different intervals. What he found became known as the forgetting curve: immediately after learning, memory is strong, but it drops steeply within the first day and then levels off into a slow, long decline. Without review, roughly half of new information is gone within a few days. The curve is steepest at the start, which means the timing of your first review matters more than the total time you spend studying.
+
+What is actually happening is that a memory trace, called an engram, is fragile when it is new. Each time you successfully recall the information, you strengthen the trace and flatten the curve. The enemy is not time itself but the absence of retrieval. A fact you never try to pull back out of your head is a fact your brain judges unimportant and quietly discards.
+
+The Testing Effect
+
+The single most counterintuitive finding in learning science is that being tested on material improves memory more than re-reading it. This is called the testing effect, or retrieval practice. When you read a paragraph a second and third time, it feels familiar and that feeling of fluency tricks you into thinking you know it. But familiarity is not recall. Recognition is easy; retrieval is hard, and it is the hard act of pulling information out of memory that builds durable memory.
+
+In study after study, students who were tested on a text remembered substantially more a week later than students who studied the same text for the same amount of time without being tested. The act of struggling to retrieve consolidates the memory and reveals what you do not actually know. A good rule for any learner: do not trust a page you have merely re-read. Close it and try to reproduce its key points from memory.
+
+Spaced Repetition
+
+If retrieval strengthens memory, spacing those retrievals out multiplies the effect. Spaced repetition means reviewing material at increasing intervals: soon after learning, then a day later, then three days, then a week, then a month. Each review is timed just before you would have forgotten, which forces retrieval at the moment the memory is weakest and therefore strengthens it the most. This is why cramming the night before an exam feels productive but fails you two weeks later; massed practice creates a memory spike that collapses, while spaced practice builds a memory that lasts.
+
+The intervals do not need to be precise to work. The principle is simply this: review a little, often, and increasingly far apart, rather than all at once. A system that decides when each fact is due for you is more reliable than willpower, because it removes the guesswork about what to study next.
+
+Elaboration and Making Connections
+
+Memory is strengthened when new information is tied to what you already know. This is elaboration. A bare fact floating in isolation is easy to lose; the same fact attached to a web of related ideas is hard to dislodge. When you explain a concept in your own words, or connect it to a personal experience, or ask "why does this work," you are elaborating, and you are making the memory more retrievable by giving your brain more paths back to it.
+
+This is why teaching someone else is such a powerful study method. To teach, you must organize the material, translate it into plain language, and anticipate questions, all of which are forms of elaboration. You do not truly understand something until you can explain it simply, and the attempt to explain it is what builds the understanding.
+
+Interleaving
+
+Most textbooks present one topic at a time, in long blocks, and most students study the same way: all of chapter three, then all of chapter four. Interleaving flips this by mixing different but related topics or problem types within a session. At first it feels slower and more confusing, because you are constantly switching contexts and making mistakes. Over time, though, interleaving produces better discrimination: you learn not just how to solve a problem but when to apply which method.
+
+The cost is short-term frustration; the benefit is long-term transfer. Spacing decides when you review, interleaving decides what you mix. Together they push learning from rote repetition toward flexible understanding.
+
+Dual Coding
+
+The brain has at least two broad channels for memory: verbal and visual. Dual coding is the practice of representing the same information in both forms, such as reading a description while also studying a diagram. Because the two channels are partly independent, you create two routes to the same memory. If one fades, the other can rescue it. A concept drawn as a map, a timeline, or a simple sketch is far easier to hold than the same concept described only in sentences.
+
+This is why diagrams, metaphor, and analogy are not decorations but memory aids. A good metaphor is a bridge: it lets the new idea lean on an old, solid one.
+
+Sleep and Consolidation
+
+Learning is not finished when the study session ends. During sleep, especially slow-wave and REM sleep, the brain replays and reorganizes the day's experiences, moving fragile new memories from the hippocampus, a temporary holding area, into the neocortex, long-term storage. This process is called consolidation. Pull an all-nighter and you sabotage exactly the step that turns today's practice into tomorrow's knowledge.
+
+Sleep also seems to prune and strengthen connections, keeping what matters and trimming what does not. Studying well and then sleeping well is not two activities but one continuous learning cycle. The student who reviews in the evening and sleeps eight hours will outperform, over weeks, the student who reviews the same material at 3 a.m. and sleeps two.
+
+Metacognition and Desirable Difficulties
+
+A theme runs through all of these findings: the strategies that feel easy are often the ones that work least, and the ones that feel hard are often the ones that work most. Psychologists call these hard-but-useful methods desirable difficulties. Retrieval is harder than re-reading, spacing is harder than cramming, interleaving is harder than blocking, and struggling to explain is harder than highlighting. Each difficulty slows you down in the moment and helps you in the long run.
+
+Metacognition is the skill of knowing what you know. Most learners are overconfident about material they have merely seen and underconfident about material they have genuinely practiced retrieving. The fix is to replace the feeling of fluency with evidence: test yourself, and let the test tell you what is actually solid. The goal is not to feel like you are learning; it is to be able to remember.
+
+Building a System
+
+None of this requires genius, only a method. Read or watch once to get the shape of the material. Then close the source and retrieve: write down or say the key ideas without looking. Elaborate by connecting each idea to something you already understand, and sketch it if you can. Space your reviews so each one lands just before you would forget. Mix related topics so you learn when to use each. Sleep on it. Repeat the cycle, and let the reviews get farther apart as the memory hardens.
+
+The people who seem to have "good memory" are usually just people who stumbled into these habits. The science is old, it is robust, and it is available to anyone. You do not need to study longer. You need to study in a way that works with how the brain actually learns, instead of against it. Remember less by trying to hold everything at once, and remember more by retrieving a little, often, and over time.

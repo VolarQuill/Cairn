@@ -37,6 +37,12 @@ export function hasApiKey(): boolean {
   return resolvedProvider() !== null;
 }
 
+let _lastError: string | null = null;
+/** Diagnostics: the error from the most recent failed AI call, if any. */
+export function getLastAiError(): string | null {
+  return _lastError;
+}
+
 /** Resolve the model id. Never hard-codes a specific vendor's model. */
 export function MODEL(): string {
   return resolvedModel();
@@ -76,6 +82,8 @@ export async function complete(
 ): Promise<{ text: string; source: "model" | "offline" }> {
   const provider = activeProvider();
   if (!provider) {
+    _lastError =
+      "No AI provider configured (set GEMINI_API_KEY or ANTHROPIC_API_KEY, or add a key in Settings).";
     if (opts.requireModel || !offline) {
       throw new Error(
         "No AI provider is configured. Set GEMINI_API_KEY or ANTHROPIC_API_KEY, or add your own key in Settings, to enable AI generation."
@@ -91,6 +99,7 @@ export async function complete(
         : await anthropicComplete(opts);
     return { text, source: "model" };
   } catch (e: any) {
+    _lastError = e?.message ?? String(e);
     if (offline && !opts.requireModel) {
       return { text: offline(), source: "offline" };
     }

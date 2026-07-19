@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { randomUUID } from "node:crypto";
 import type { Database as DbInterface } from "./index";
 import type {
   Attempt,
@@ -61,6 +62,7 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        points: data.points ?? 0,
         created_at: data.created_at,
       };
     },
@@ -76,6 +78,7 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        points: data.points ?? 0,
         created_at: data.created_at,
       };
     },
@@ -95,6 +98,7 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        points: data.points ?? 0,
         created_at: data.created_at,
       };
     },
@@ -111,8 +115,23 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        points: data.points ?? 0,
         created_at: data.created_at,
       };
+    },
+
+    async listLeaderboard(limit) {
+      const { data, error } = await sb()
+        .from("profiles")
+        .select("id,name,points")
+        .order("points", { ascending: false })
+        .limit(limit);
+      if (error) throw new Error(error.message);
+      return (data ?? []).map((r: any) => ({
+        id: r.id,
+        name: r.name,
+        points: r.points ?? 0,
+      }));
     },
 
     async createCourse(input) {
@@ -120,6 +139,7 @@ export function createSupabaseDb(): DbInterface {
       const { data, error } = await sb()
         .from("courses")
         .insert({
+          id: randomUUID(),
           user_id: input.user_id,
           title: input.title,
           description: input.description,
@@ -169,7 +189,7 @@ export function createSupabaseDb(): DbInterface {
     },
 
     async addLessons(course_id, lessons) {
-      const rows = lessons.map((l) => ({ course_id, ...l }));
+      const rows = lessons.map((l) => ({ id: randomUUID(), course_id, ...l }));
       const { data, error } = await sb()
         .from("lessons")
         .insert(rows)
@@ -255,6 +275,7 @@ export function createSupabaseDb(): DbInterface {
       const { data, error } = await sb()
         .from("quizzes")
         .insert({
+          id: randomUUID(),
           course_id: input.course_id,
           lesson_id: input.lesson_id,
           title: input.title,
@@ -311,6 +332,7 @@ export function createSupabaseDb(): DbInterface {
       const { data, error } = await sb()
         .from("attempts")
         .insert({
+          id: randomUUID(),
           user_id: input.user_id,
           quiz_id: input.quiz_id,
           score: input.score,
@@ -357,6 +379,7 @@ export function createSupabaseDb(): DbInterface {
       const { data, error } = await sb()
         .from("chat_messages")
         .insert({
+          id: randomUUID(),
           course_id: input.course_id,
           user_id: input.user_id,
           role: input.role,
@@ -418,7 +441,7 @@ export function createSupabaseDb(): DbInterface {
       const { data, error } = await sb()
         .from("progress")
         .upsert(
-          { user_id, lesson_id, course_id, ...rest },
+          { id: randomUUID(), user_id, lesson_id, course_id, ...rest },
           { onConflict: "user_id,lesson_id" }
         )
         .select()
@@ -448,6 +471,7 @@ export function createSupabaseDb(): DbInterface {
         .from("progress")
         .upsert(
           {
+            id: randomUUID(),
             user_id,
             lesson_id,
             course_id,

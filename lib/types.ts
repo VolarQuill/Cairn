@@ -11,7 +11,15 @@ export interface User {
   email: string;
   name: string;
   password_hash?: string | null; // local backend only
+  points: number; // global ranking score, earned by quizzing
   created_at: string;
+}
+
+/** A row on the global leaderboard (no private fields). */
+export interface LeaderboardEntry {
+  id: string;
+  name: string;
+  points: number;
 }
 
 export interface Course {

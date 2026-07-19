@@ -2,6 +2,7 @@ import { json, fail, guard } from "@/lib/api";
 import { getSessionUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { generateCourse } from "@/lib/ai/prompts";
+import { getLastAiError } from "@/lib/ai/provider";
 import { resolveSource } from "@/lib/ingest";
 import type { Level, SourceType } from "@/lib/types";
 
@@ -38,6 +39,7 @@ export const POST = guard(async (req: Request) => {
   const { text, resolved } = await resolveSource({ sourceType, sourceText });
 
   const generated = await generateCourse({ sourceType, sourceText: text, goal, level });
+  const aiError = getLastAiError();
 
   const db = await getDb();
   const course = await db.createCourse({
@@ -72,5 +74,6 @@ export const POST = guard(async (req: Request) => {
     lessonCount: lessons.length,
     resolved,
     offline: false,
+    aiError: aiError ?? null,
   });
 });

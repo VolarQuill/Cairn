@@ -37,6 +37,8 @@ export function QuizRunner({
   const [dir, setDir] = useState<1 | -1>(1);
   const [results, setResults] = useState<any>(null);
   const [err, setErr] = useState("");
+  const [count, setCount] = useState(10);
+  const [custom, setCustom] = useState(15);
 
   async function generate(lid?: string | null) {
     setLoading(true);
@@ -48,7 +50,7 @@ export function QuizRunner({
       const res = await fetch("/api/quiz", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ courseId, lessonId: lid ?? lessonId, count: 5 }),
+        body: JSON.stringify({ courseId, lessonId: lid ?? lessonId, count }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not generate quiz.");
@@ -143,6 +145,34 @@ export function QuizRunner({
                   </option>
                 ))}
               </select>
+              <select
+                className="input sm:w-36"
+                value={["10", "20", "30"].includes(String(count)) ? String(count) : "custom"}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v === "custom") setCount(Math.min(30, Math.max(3, custom)));
+                  else setCount(Number(v));
+                }}
+              >
+                <option value="10">10 questions</option>
+                <option value="20">20 questions</option>
+                <option value="30">30 questions</option>
+                <option value="custom">Custom</option>
+              </select>
+              {!["10", "20", "30"].includes(String(count)) && (
+                <input
+                  type="number"
+                  min={3}
+                  max={30}
+                  className="input w-20"
+                  value={custom}
+                  onChange={(e) => {
+                    const n = Math.min(30, Math.max(3, Number(e.target.value) || 3));
+                    setCustom(n);
+                    setCount(n);
+                  }}
+                />
+              )}
               <button
                 onClick={() => generate(lessonId)}
                 className="btn-ghost"
@@ -297,6 +327,11 @@ export function QuizRunner({
                         <Icon name="tree" className="inline h-4 w-4 align-middle" />
                       )}
                     </p>
+                    {results.earned ? (
+                      <p className="text-sm font-medium text-forest-100 dark:text-moss-50">
+                        +{results.earned} points · total {results.points}
+                      </p>
+                    ) : null}
                     <div className="mt-2 flex gap-2">
                       <button onClick={() => generate(lessonId)} className="btn-amber">
                         <Icon name="refresh" className="inline h-4 w-4 align-middle" /> Try another

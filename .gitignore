@@ -35,3 +35,6 @@ cairn-vercel/
 
 # TypeScript build info
 *.tsbuildinfo
+
+.vercel
+.env*

@@ -5,6 +5,7 @@ import { CourseCard } from "@/components/CourseCard";
 import { MasteryBadge } from "@/components/MasteryBadge";
 import { Logo } from "@/components/Logo";
 import { Icon, type IconName } from "@/components/icons";
+import { rankForPoints } from "@/lib/ranks";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,7 @@ export default async function DashboardPage() {
   }
 
   const progress = await db.listProgress(user.id);
+  const me = rankForPoints(user.points ?? 0);
   const totalLessons = Object.values(lessonCounts).reduce((a, b) => a + b, 0);
   const mastered = progress.filter((p) => p.status === "mastered").length;
   const dueNow = progress.filter(
@@ -63,6 +65,23 @@ export default async function DashboardPage() {
             <div className="text-sm text-bark-50 dark:text-cream-300">{s.label}</div>
           </div>
         ))}
+      </div>
+
+      {/* Your rank */}
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 card p-5">
+        <div className="flex items-center gap-3">
+          <Icon name={me.tier.icon as IconName} size={26} className="text-amber-100 shrink-0" />
+          <div>
+            <div className="text-lg font-semibold">{me.tier.name}</div>
+            <div className="text-sm text-bark-50 dark:text-cream-300">
+              {user.points ?? 0} points
+              {me.next ? ` · ${me.toNext} to ${me.next.name}` : ""}
+            </div>
+          </div>
+        </div>
+        <Link href="/leaderboard" className="btn-ghost">
+          View leaderboard <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
+        </Link>
       </div>
 
       <div className="mt-9 grid gap-8 lg:grid-cols-3">
