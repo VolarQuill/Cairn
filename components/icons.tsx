@@ -43,7 +43,8 @@ export type IconName =
   | "sun"
   | "moon"
   | "trash"
-  | "key";
+  | "key"
+  | "users";
 
 const PATHS: Record<IconName, React.ReactNode> = {
   // A small cairn — stacked trail stones.
@@ -250,6 +251,15 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <circle cx="8" cy="8" r="4" />
       <path d="M11 11l8 8" />
       <path d="M16 16l2-2M19 19l2-2" />
+    </>
+  ),
+  // Users (friends)
+  users: (
+    <>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5" />
+      <path d="M16 5.4a3 3 0 0 1 0 5.8" />
+      <path d="M17.5 15c2.6.5 4 2.1 4 5" />
     </>
   ),
 };

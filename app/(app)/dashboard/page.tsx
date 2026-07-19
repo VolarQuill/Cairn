@@ -106,9 +106,9 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <div className="mt-9 grid gap-8 lg:grid-cols-3">
+      <div className="mt-9 grid gap-8 lg:grid-cols-3 lg:gap-0">
         {/* Main column */}
-        <div className="space-y-9 lg:col-span-2">
+        <div className="space-y-9 lg:col-span-2 lg:pr-8">
           {/* Goals */}
           <div>
             <h2 className="mb-3 text-2xl">Goals</h2>
@@ -239,7 +239,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Right rail */}
-        <aside className="space-y-6">
+        <aside className="space-y-6 lg:col-span-1 lg:border-l lg:border-cream-300 lg:pl-8 dark:lg:border-cream-300/10">
           <div>
             <h2 className="mb-3 text-2xl">Today&apos;s goal</h2>
             <div className="card flex flex-col p-5">
