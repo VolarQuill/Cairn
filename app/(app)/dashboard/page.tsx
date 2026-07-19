@@ -6,6 +6,9 @@ import { MasteryBadge } from "@/components/MasteryBadge";
 import { Logo } from "@/components/Logo";
 import { Icon, type IconName } from "@/components/icons";
 import { rankForPoints } from "@/lib/ranks";
+import { ClientGoals } from "@/components/ClientGoals";
+import { dailyServerGoal, progressFor, activityTotal } from "@/lib/goals";
+import type { GoalMetric, GoalWithProgress } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +37,19 @@ export default async function DashboardPage() {
     (p) => p.status !== "mastered" && new Date(p.due_at).getTime() <= Date.now()
   );
   const studied = progress.filter((p) => p.status !== "new").length;
+
+  // Goals: today's server challenge (earns points) + the user's personal goals.
+  const serverGoal = dailyServerGoal();
+  const serverCurrent = await db.activityToday(user.id, serverGoal.metric);
+  const serverWithProgress = progressFor(serverGoal, serverCurrent);
+  serverWithProgress.awarded = (user.awarded_goals ?? []).includes(serverGoal.id);
+
+  const clientRaw = await db.listClientGoals(user.id);
+  const clientInitial: GoalWithProgress[] = [];
+  for (const g of clientRaw) {
+    const cur = await activityTotal(db, user.id, g.metric);
+    clientInitial.push(progressFor(g, cur));
+  }
 
   const stats: { label: string; value: number; icon: IconName }[] = [
     { label: "Courses", value: courses.length, icon: "books" },
@@ -82,6 +98,59 @@ export default async function DashboardPage() {
         <Link href="/leaderboard" className="btn-ghost">
           View leaderboard <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
         </Link>
+      </div>
+
+      {/* Goals */}
+      <div className="mt-9">
+        <h2 className="mb-3 text-2xl">Goals</h2>
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Today's server-set challenge */}
+          <div className="card flex flex-col p-5">
+            <div className="flex items-center justify-between gap-2">
+              <span className="rounded-full bg-amber-100/15 px-2.5 py-1 text-xs font-medium text-amber-100">
+                Set by Cairn
+              </span>
+              {serverWithProgress.points > 0 && (
+                <span className="flex items-center gap-1 text-xs font-semibold text-forest-200 dark:text-moss-50">
+                  <Icon name="rock" size={14} /> +{serverWithProgress.points} pts
+                </span>
+              )}
+            </div>
+            <h3 className="mt-3 text-lg font-semibold">{serverWithProgress.title}</h3>
+            {serverWithProgress.description && (
+              <p className="mt-1 text-sm text-bark-100 dark:text-cream-200">
+                {serverWithProgress.description}
+              </p>
+            )}
+            <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-cream-200 dark:bg-forest-400">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  serverWithProgress.complete
+                    ? "bg-forest-200 dark:bg-moss-50"
+                    : "bg-amber-100"
+                }`}
+                style={{ width: `${serverWithProgress.pct}%` }}
+              />
+            </div>
+            <div className="mt-2 flex items-center justify-between text-sm">
+              <span className="text-bark-50 dark:text-cream-300">
+                {serverWithProgress.complete
+                  ? "Goal complete!"
+                  : `${serverWithProgress.current} / ${serverWithProgress.target} ${metricNoun(
+                      serverWithProgress.metric
+                    )}`}
+              </span>
+              {serverWithProgress.awarded && (
+                <span className="flex items-center gap-1 font-medium text-forest-200 dark:text-moss-50">
+                  <Icon name="check" size={14} /> Earned
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Personal, client-set goals (no points) */}
+          <ClientGoals initial={clientInitial} />
+        </div>
       </div>
 
       <div className="mt-9 grid gap-8 lg:grid-cols-3">
@@ -142,6 +211,21 @@ export default async function DashboardPage() {
       </div>
     </div>
   );
+}
+
+function metricNoun(m: GoalMetric): string {
+  switch (m) {
+    case "quiz_questions":
+      return "questions";
+    case "quizzes":
+      return "quizzes";
+    case "lessons":
+      return "lessons";
+    case "courses":
+      return "courses";
+    default:
+      return m;
+  }
 }
 
 function EmptyState() {

@@ -10,6 +10,7 @@ import type {
   Quiz,
   User,
   Mastery,
+  Goal,
 } from "@/lib/types";
 import { nowISO, uid, inMinutes, env } from "@/lib/util";
 
@@ -21,6 +22,7 @@ interface Store {
   attempts: Attempt[];
   chat: ChatMessage[];
   progress: Progress[];
+  clientGoals: Goal[];
 }
 
 const DATA_FILE =
@@ -43,6 +45,7 @@ async function load(): Promise<Store> {
       attempts: [],
       chat: [],
       progress: [],
+      clientGoals: [],
     };
   }
   // ensure all arrays exist (forward-compat for older files)
@@ -54,6 +57,7 @@ async function load(): Promise<Store> {
     "attempts",
     "chat",
     "progress",
+    "clientGoals",
   ] as const) {
     if (!Array.isArray((cache as any)[k])) (cache as any)[k] = [];
   }
@@ -118,6 +122,7 @@ export function createLocalDb(): Database {
           name: input.name,
           password_hash: input.password_hash ?? null,
           points: 0,
+          awarded_goals: [],
           created_at: nowISO(),
         };
         s.users.push(user);
@@ -343,6 +348,59 @@ export function createLocalDb(): Database {
         };
         p.due_at = inMinutes(offsets[status]);
         return p;
+      });
+    },
+
+    async activityToday(userId, metric) {
+      const s = await load();
+      const today = nowISO().slice(0, 10);
+      const sameDay = (iso?: string | null) => (iso ?? "").slice(0, 10) === today;
+      switch (metric) {
+        case "quiz_questions":
+          return s.attempts
+            .filter((a) => a.user_id === userId && sameDay(a.created_at))
+            .reduce((n, a) => n + (a.total ?? 0), 0);
+        case "quizzes":
+          return new Set(
+            s.attempts
+              .filter((a) => a.user_id === userId && sameDay(a.created_at))
+              .map((a) => a.quiz_id)
+          ).size;
+        case "lessons":
+          return s.progress.filter((p) => p.user_id === userId && sameDay(p.last_reviewed_at)).length;
+        case "courses":
+          return s.courses.filter((c) => c.user_id === userId && sameDay(c.created_at)).length;
+        default:
+          return 0;
+      }
+    },
+    async listClientGoals(userId) {
+      const s = await load();
+      return s.clientGoals
+        .filter((g) => g.owner_id === userId)
+        .sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
+    },
+    async createClientGoal(input) {
+      return withWrite((s) => {
+        const g: Goal = {
+          id: uid("goal"),
+          kind: "client",
+          title: input.title,
+          metric: input.metric,
+          target: input.target,
+          points: 0, // personal goals never award points
+          owner_id: input.user_id,
+          created_at: nowISO(),
+        };
+        s.clientGoals.push(g);
+        return g;
+      });
+    },
+    async deleteClientGoal(id, userId) {
+      return withWrite((s) => {
+        s.clientGoals = s.clientGoals.filter(
+          (g) => !(g.id === id && g.owner_id === userId)
+        );
       });
     },
   };

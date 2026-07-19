@@ -10,6 +10,8 @@ import type {
   Level,
   SourceType,
   Mastery,
+  Goal,
+  GoalMetric,
 } from "@/lib/types";
 import { dataBackend } from "@/lib/util";
 
@@ -99,6 +101,19 @@ export interface Database {
     course_id: string,
     status: Mastery
   ): Promise<Progress>;
+
+  // ---- goals ----
+  /** Activity count for `metric` performed *today* (server daily goals). */
+  activityToday(user_id: string, metric: GoalMetric): Promise<number>;
+  /** Personal (client-set) goals owned by the user. */
+  listClientGoals(user_id: string): Promise<Goal[]>;
+  createClientGoal(input: {
+    user_id: string;
+    title: string;
+    metric: GoalMetric;
+    target: number;
+  }): Promise<Goal>;
+  deleteClientGoal(id: string, user_id: string): Promise<void>;
 }
 
 let cached: Database | null = null;

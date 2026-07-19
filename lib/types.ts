@@ -12,6 +12,8 @@ export interface User {
   name: string;
   password_hash?: string | null; // local backend only
   points: number; // global ranking score, earned by quizzing
+  /** Server goal ids already completed + awarded points (prevents double-award). */
+  awarded_goals?: string[];
   created_at: string;
 }
 
@@ -94,6 +96,35 @@ export interface Progress {
   reps: number;
   due_at: string;
   last_reviewed_at: string | null;
+}
+
+// ---- Goals ----
+// A goal tracks progress against an activity metric. Two kinds:
+//  - "server": chosen by the server (daily rotating). Completing it awards points.
+//  - "client": set by the user. Completing it shows progress but awards no points.
+
+export type GoalMetric = "quiz_questions" | "quizzes" | "lessons" | "courses";
+
+export interface Goal {
+  id: string;
+  kind: "server" | "client";
+  title: string;
+  description?: string;
+  metric: GoalMetric;
+  target: number;
+  /** Points awarded on completion. Always 0 for client-set goals. */
+  points: number;
+  owner_id?: string | null; // set for client goals
+  created_at?: string;
+}
+
+/** A Goal with its live progress filled in for display. */
+export interface GoalWithProgress extends Goal {
+  current: number;
+  target: number;
+  pct: number; // 0-100
+  complete: boolean;
+  awarded: boolean;
 }
 
 export interface ChatMessage {

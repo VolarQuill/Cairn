@@ -3,6 +3,7 @@ import { getSessionUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { gradeShortAnswer } from "@/lib/ai/prompts";
 import { pointsForQuiz } from "@/lib/ranks";
+import { awardServerGoals } from "@/lib/goals";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -76,9 +77,13 @@ export const POST = guard(async (req: Request, ctx: any) => {
 
   // Award difficulty-scaled points: correct x per-correct x course-level multiplier.
   const earned = pointsForQuiz(score, course.level);
-  const updated = await db.updateUser(user.id, {
+  let updated = await db.updateUser(user.id, {
     points: (user.points ?? 0) + earned,
   });
+
+  // Server daily goal: grant bonus points if this quiz completed it (once).
+  const bonus = await awardServerGoals(updated, db);
+  updated = bonus.user;
 
   return json({
     score,
@@ -86,6 +91,7 @@ export const POST = guard(async (req: Request, ctx: any) => {
     attemptId: attempt.id,
     results,
     earned,
+    goalPoints: bonus.awardedPoints,
     points: updated.points ?? (user.points ?? 0) + earned,
   });
 });

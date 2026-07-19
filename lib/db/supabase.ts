@@ -12,6 +12,7 @@ import type {
   Mastery,
   Level,
   SourceType,
+  Goal,
 } from "@/lib/types";
 import { env } from "@/lib/util";
 
@@ -63,6 +64,7 @@ export function createSupabaseDb(): DbInterface {
         name: data.name,
         password_hash: null,
         points: data.points ?? 0,
+        awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
       };
     },
@@ -79,6 +81,7 @@ export function createSupabaseDb(): DbInterface {
         name: data.name,
         password_hash: null,
         points: data.points ?? 0,
+        awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
       };
     },
@@ -99,6 +102,7 @@ export function createSupabaseDb(): DbInterface {
         name: data.name,
         password_hash: null,
         points: data.points ?? 0,
+        awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
       };
     },
@@ -116,6 +120,7 @@ export function createSupabaseDb(): DbInterface {
         name: data.name,
         password_hash: null,
         points: data.points ?? 0,
+        awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
       };
     },
@@ -485,6 +490,82 @@ export function createSupabaseDb(): DbInterface {
         .single();
       if (error) throw new Error(error.message);
       return data as Progress;
+    },
+
+    async activityToday(userId, metric) {
+      const start = `${new Date().toISOString().slice(0, 10)}T00:00:00Z`;
+      if (metric === "quiz_questions" || metric === "quizzes") {
+        const { data, error } = await sb()
+          .from("attempts")
+          .select("quiz_id,total")
+          .eq("user_id", userId)
+          .gte("created_at", start);
+        if (error) throw new Error(error.message);
+        const rows = (data ?? []) as any[];
+        if (metric === "quiz_questions")
+          return rows.reduce((n: number, r: any) => n + (r.total ?? 0), 0);
+        return new Set(rows.map((r: any) => r.quiz_id)).size;
+      }
+      const table = metric === "lessons" ? "progress" : "courses";
+      const col = metric === "lessons" ? "last_reviewed_at" : "created_at";
+      const { data, error } = await sb()
+        .from(table)
+        .select("id")
+        .eq("user_id", userId)
+        .gte(col, start);
+      if (error) throw new Error(error.message);
+      return (data ?? []).length;
+    },
+    async listClientGoals(userId) {
+      const { data, error } = await sb()
+        .from("client_goals")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+      if (error) throw new Error(error.message);
+      return (data ?? []).map((r: any): Goal => ({
+        id: r.id,
+        kind: "client",
+        title: r.title,
+        metric: r.metric,
+        target: r.target ?? 1,
+        points: 0,
+        owner_id: r.user_id,
+        created_at: r.created_at,
+      }));
+    },
+    async createClientGoal(input) {
+      const { data, error } = await sb()
+        .from("client_goals")
+        .insert({
+          id: randomUUID(),
+          user_id: input.user_id,
+          title: input.title,
+          metric: input.metric,
+          target: input.target,
+          created_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+      if (error) throw new Error(error.message);
+      return {
+        id: data.id,
+        kind: "client",
+        title: data.title,
+        metric: data.metric,
+        target: data.target ?? 1,
+        points: 0,
+        owner_id: data.user_id,
+        created_at: data.created_at,
+      };
+    },
+    async deleteClientGoal(id, userId) {
+      const { error } = await sb()
+        .from("client_goals")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", userId);
+      if (error) throw new Error(error.message);
     },
   };
 }

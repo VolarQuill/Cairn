@@ -17,6 +17,9 @@ create table if not exists public.profiles (
 create index if not exists profiles_points_idx on public.profiles (points desc);
 create index if not exists profiles_email_idx on public.profiles (email);
 
+-- Server-awarded goal ids live on the profile so points are granted exactly once.
+alter table public.profiles add column if not exists awarded_goals jsonb not null default '[]';
+
 -- Auto-create a profile row when a Supabase auth user is created.
 create or replace function public.handle_new_user()
 returns trigger
@@ -117,6 +120,17 @@ create table if not exists public.progress (
 create unique index if not exists progress_uniq on public.progress (user_id, lesson_id);
 create index if not exists progress_due_idx on public.progress (user_id, due_at);
 
+-- ---------- client_goals (user-set personal goals) ----------
+create table if not exists public.client_goals (
+  id text primary key,
+  user_id uuid not null references auth.users (id) on delete cascade,
+  title text not null,
+  metric text not null default 'quiz_questions',
+  target int not null default 1,
+  created_at timestamptz not null default now()
+);
+create index if not exists client_goals_user_idx on public.client_goals (user_id, created_at desc);
+
 -- ---------- Row Level Security ----------
 alter table public.profiles      enable row level security;
 alter table public.courses       enable row level security;
@@ -125,6 +139,7 @@ alter table public.quizzes       enable row level security;
 alter table public.attempts      enable row level security;
 alter table public.chat_messages enable row level security;
 alter table public.progress      enable row level security;
+alter table public.client_goals  enable row level security;
 
 -- Profiles
 create policy "profiles: own" on public.profiles
@@ -160,4 +175,8 @@ create policy "chat: owner" on public.chat_messages
 
 -- Progress (owner-only)
 create policy "progress: owner" on public.progress
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Client goals (owner-only)
+create policy "client_goals: owner" on public.client_goals
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
