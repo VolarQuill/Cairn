@@ -7,7 +7,7 @@ import { Icon, type IconName } from "@/components/icons";
 import { rankForPoints } from "@/lib/ranks";
 import { PersonalGoals } from "@/components/PersonalGoals";
 import { FriendsPanel } from "@/components/FriendsPanel";
-import { dailyServerGoal, progressFor, activityTotal } from "@/lib/goals";
+import { dailyServerGoal, progressFor, activityTotal, clientProgressCurrent } from "@/lib/goals";
 import type { GoalMetric, GoalWithProgress } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
   const clientInitial: GoalWithProgress[] = [];
   for (const g of clientRaw) {
     const cur = await activityTotal(db, user.id, g.metric);
-    clientInitial.push(progressFor(g, cur));
+    clientInitial.push(progressFor(g, clientProgressCurrent(cur, g)));
   }
 
   // Friends (for the right-rail scoreboard) + reviews (flagged lessons).

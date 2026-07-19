@@ -119,6 +119,8 @@ export interface Database {
     target: number;
     difficulty?: Difficulty;
     course_id?: string | null;
+    /** Activity count at creation — personal-goal progress starts here. */
+    baseline?: number;
   }): Promise<Goal>;
   /** Mark a client goal done/undone (explicit completion). */
   setClientGoalDone(id: string, user_id: string, done: boolean): Promise<Goal>;

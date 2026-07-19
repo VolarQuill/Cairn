@@ -125,6 +125,12 @@ export interface Goal {
   course_id?: string | null;
   /** Explicitly marked done by the user (client goals only). */
   done?: boolean;
+  /**
+   * Activity count at the moment the goal was created. Personal-goal progress
+   * is measured FROM here (current = totalNow - baseline) so a new goal starts
+   * at 0 instead of reflecting all-time cumulative activity.
+   */
+  baseline?: number;
 }
 
 /** A Goal with its live progress filled in for display. */

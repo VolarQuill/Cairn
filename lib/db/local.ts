@@ -409,6 +409,7 @@ export function createLocalDb(): Database {
           difficulty: input.difficulty ?? "medium",
           course_id: input.course_id ?? null,
           done: false,
+          baseline: input.baseline ?? 0,
         };
         s.clientGoals.push(g);
         return g;

@@ -544,6 +544,7 @@ export function createSupabaseDb(): DbInterface {
         difficulty: (r.difficulty ?? "medium") as Difficulty,
         course_id: r.course_id ?? null,
         done: Boolean(r.done),
+        baseline: r.baseline ?? 0,
       }));
     },
     async createClientGoal(input) {
@@ -557,6 +558,7 @@ export function createSupabaseDb(): DbInterface {
           target: input.target,
           difficulty: input.difficulty ?? "medium",
           course_id: input.course_id ?? null,
+          baseline: input.baseline ?? 0,
           created_at: new Date().toISOString(),
         })
         .select()
@@ -574,6 +576,7 @@ export function createSupabaseDb(): DbInterface {
         difficulty: (data.difficulty ?? "medium") as Difficulty,
         course_id: data.course_id ?? null,
         done: Boolean(data.done),
+        baseline: data.baseline ?? 0,
       };
     },
     async setClientGoalDone(id, userId, done) {
@@ -597,6 +600,7 @@ export function createSupabaseDb(): DbInterface {
         difficulty: (data.difficulty ?? "medium") as Difficulty,
         course_id: data.course_id ?? null,
         done: Boolean(data.done),
+        baseline: data.baseline ?? 0,
       };
     },
     async deleteClientGoal(id, userId) {

@@ -82,6 +82,16 @@ export function progressFor(goal: Goal, current: number): GoalWithProgress {
   };
 }
 
+/**
+ * Personal-goal progress as of "now": how far the user has advanced since the
+ * goal was created. `total` is the all-time cumulative count; the goal's
+ * baseline was captured at creation, so a brand-new goal shows current = 0 and
+ * the bar fills as the user makes progress. Never negative.
+ */
+export function clientProgressCurrent(total: number, goal: Goal): number {
+  return Math.max(0, total - (goal.baseline ?? 0));
+}
+
 /** Cumulative (all-time) activity count — used for client-set goals. */
 export async function activityTotal(
   db: Database,

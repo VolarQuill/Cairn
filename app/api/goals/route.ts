@@ -5,6 +5,7 @@ import {
   dailyServerGoal,
   progressFor,
   activityTotal,
+  clientProgressCurrent,
 } from "@/lib/goals";
 import type { Difficulty, GoalMetric, GoalWithProgress } from "@/lib/types";
 
@@ -31,7 +32,7 @@ export const GET = guard(async () => {
   const client: GoalWithProgress[] = [];
   for (const g of clientRaw) {
     const cur = await activityTotal(db, user.id, g.metric);
-    client.push(progressFor(g, cur));
+    client.push(progressFor(g, clientProgressCurrent(cur, g)));
   }
 
   return json({ server: serverGoals, client });
@@ -65,6 +66,9 @@ export const POST = guard(async (req: Request) => {
   if (!valid.includes(metric)) return fail("Pick a valid metric.");
   if (!target) return fail("Set a target of at least 1.");
 
+  // Capture activity at creation so the goal's progress starts at 0 and fills
+  // as the user makes progress (not from all-time cumulative activity).
+  const baseline = await activityTotal(db, user.id, metric);
   const goal = await db.createClientGoal({
     user_id: user.id,
     title,
@@ -72,9 +76,9 @@ export const POST = guard(async (req: Request) => {
     target,
     difficulty,
     course_id,
+    baseline,
   });
-  const cur = await activityTotal(db, user.id, goal.metric);
-  return json({ goal: progressFor(goal, cur) }, 201);
+  return json({ goal: progressFor(goal, 0) }, 201);
 });
 
 export const DELETE = guard(async (req: Request) => {

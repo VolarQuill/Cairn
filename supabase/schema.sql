@@ -137,6 +137,8 @@ create index if not exists client_goals_user_idx on public.client_goals (user_id
 alter table public.client_goals add column if not exists difficulty text not null default 'medium';
 alter table public.client_goals add column if not exists course_id text;
 alter table public.client_goals add column if not exists done boolean not null default false;
+-- Activity count captured at creation; personal-goal progress starts here.
+alter table public.client_goals add column if not exists baseline integer not null default 0;
 
 -- ---------- Row Level Security ----------
 alter table public.profiles      enable row level security;
