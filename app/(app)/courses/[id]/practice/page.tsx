@@ -13,7 +13,7 @@ export default async function PracticePage({
   searchParams,
 }: {
   params: { id: string };
-  searchParams: { lesson?: string };
+  searchParams: { lesson?: string; from?: string };
 }) {
   const user = await requireUser();
   const db = await getDb();
