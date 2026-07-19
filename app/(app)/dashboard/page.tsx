@@ -77,32 +77,32 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="mt-6 grid grid-cols-3 gap-3">
+      <div className="mt-6 grid grid-cols-3 gap-4">
         {stats.map((s) => (
-          <div key={s.label} className="card p-3">
-            <Icon name={s.icon} size={18} className="text-forest-200 dark:text-moss-50" />
-            <div className="mt-1 font-display text-2xl text-forest-200 dark:text-moss-50">
+          <div key={s.label} className="card p-4">
+            <Icon name={s.icon} size={22} className="text-forest-200 dark:text-moss-50" />
+            <div className="mt-1 font-display text-3xl text-forest-200 dark:text-moss-50">
               {s.value}
             </div>
-            <div className="text-xs text-bark-50 dark:text-cream-300">{s.label}</div>
+            <div className="text-sm text-bark-50 dark:text-cream-300">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Your rank */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 card p-4">
-        <div className="flex items-center gap-2.5">
-          <Icon name={me.tier.icon as IconName} size={20} className="text-amber-100 shrink-0" />
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 card p-5">
+        <div className="flex items-center gap-3">
+          <Icon name={me.tier.icon as IconName} size={26} className="text-amber-100 shrink-0" />
           <div>
-            <div className="text-base font-semibold">{me.tier.name}</div>
-            <div className="text-xs text-bark-50 dark:text-cream-300">
+            <div className="text-lg font-semibold">{me.tier.name}</div>
+            <div className="text-sm text-bark-50 dark:text-cream-300">
               {user.points ?? 0} points
               {me.next ? ` · ${me.toNext} to ${me.next.name}` : ""}
             </div>
           </div>
         </div>
-        <Link href="/leaderboard" className="btn-ghost text-xs">
-          Leaderboard <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
+        <Link href="/leaderboard" className="btn-ghost">
+          View leaderboard <Icon name="arrow-right" className="inline h-4 w-4 align-middle" />
         </Link>
       </div>
 

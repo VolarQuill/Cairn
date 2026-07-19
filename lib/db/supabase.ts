@@ -15,6 +15,7 @@ import type {
   Goal,
   Friend,
   Review,
+  UserSearch,
 } from "@/lib/types";
 import { env } from "@/lib/util";
 
@@ -65,6 +66,7 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        username: data.username ?? "",
         points: data.points ?? 0,
         awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
@@ -82,6 +84,7 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        username: data.username ?? "",
         points: data.points ?? 0,
         awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
@@ -94,6 +97,7 @@ export function createSupabaseDb(): DbInterface {
           id: input.id ?? undefined,
           email: input.email.toLowerCase(),
           name: input.name,
+          username: input.username ?? null,
         })
         .select()
         .single();
@@ -103,6 +107,7 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        username: data.username ?? "",
         points: data.points ?? 0,
         awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
@@ -121,6 +126,7 @@ export function createSupabaseDb(): DbInterface {
         email: data.email,
         name: data.name,
         password_hash: null,
+        username: data.username ?? "",
         points: data.points ?? 0,
         awarded_goals: (data.awarded_goals as string[] | null) ?? [],
         created_at: data.created_at,
@@ -611,6 +617,44 @@ export function createSupabaseDb(): DbInterface {
           `and(user_id.eq.${userId},friend_id.eq.${friendId}),and(user_id.eq.${friendId},friend_id.eq.${userId})`
         );
       if (error) throw new Error(error.message);
+    },
+    async getUserByUsername(username) {
+      const { data } = await sb()
+        .from("profiles")
+        .select("*")
+        .eq("username", username.toLowerCase())
+        .maybeSingle();
+      if (!data) return null;
+      return {
+        id: data.id,
+        email: data.email,
+        name: data.name,
+        username: data.username ?? "",
+        password_hash: null,
+        points: data.points ?? 0,
+        awarded_goals: (data.awarded_goals as string[] | null) ?? [],
+        created_at: data.created_at,
+      };
+    },
+    async searchUsers(query, excludeId, limit = 8) {
+      const { data, error } = await sb()
+        .from("profiles")
+        .select("id,name,username,email,points")
+        .or(
+          `username.ilike.%${query}%,email.ilike.%${query}%,name.ilike.%${query}%`
+        )
+        .neq("id", excludeId)
+        .limit(limit);
+      if (error) throw new Error(error.message);
+      return (data ?? []).map(
+        (r: any): UserSearch => ({
+          id: r.id,
+          name: r.name,
+          username: r.username ?? "",
+          email: r.email,
+          points: r.points ?? 0,
+        })
+      );
     },
 
     // ---- reviews ----

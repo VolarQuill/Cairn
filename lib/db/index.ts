@@ -14,6 +14,7 @@ import type {
   GoalMetric,
   Friend,
   Review,
+  UserSearch,
 } from "@/lib/types";
 import { dataBackend } from "@/lib/util";
 
@@ -30,6 +31,7 @@ export interface Database {
     id?: string;
     email: string;
     name: string;
+    username?: string;
     password_hash?: string | null;
   }): Promise<User>;
   updateUser(id: string, patch: Partial<User>): Promise<User>;
@@ -124,6 +126,10 @@ export interface Database {
   addFriend(user_id: string, friend_id: string): Promise<void>;
   /** Removes a mutual friendship. */
   removeFriend(user_id: string, friend_id: string): Promise<void>;
+  /** Find a single user by their unique username (case-insensitive). */
+  getUserByUsername(username: string): Promise<User | null>;
+  /** Type-ahead search across username/email/name, excluding `excludeId`. */
+  searchUsers(query: string, excludeId: string, limit?: number): Promise<UserSearch[]>;
 
   // ---- reviews (lessons flagged "needs review") ----
   listReviews(user_id: string): Promise<Review[]>;

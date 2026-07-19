@@ -10,6 +10,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  /** Unique, searchable handle (set at signup). Null on pre-username accounts. */
+  username: string;
   password_hash?: string | null; // local backend only
   points: number; // global ranking score, earned by quizzing
   /** Server goal ids already completed + awarded points (prevents double-award). */
@@ -142,6 +144,15 @@ export interface ChatMessage {
 export interface Friend {
   id: string; // friend user id
   name: string;
+  email: string;
+  points: number;
+}
+
+/** A user match from the friend-search box. */
+export interface UserSearch {
+  id: string;
+  name: string;
+  username: string;
   email: string;
   points: number;
 }

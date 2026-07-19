@@ -12,6 +12,7 @@ import type {
   Mastery,
   Goal,
   Review,
+  UserSearch,
 } from "@/lib/types";
 import { nowISO, uid, inMinutes, env } from "@/lib/util";
 
@@ -133,6 +134,7 @@ export function createLocalDb(): Database {
           id: uid("usr"),
           email: input.email,
           name: input.name,
+          username: input.username ?? input.name,
           password_hash: input.password_hash ?? null,
           points: 0,
           awarded_goals: [],
@@ -457,6 +459,33 @@ export function createLocalDb(): Database {
             )
         );
       });
+    },
+    async getUserByUsername(username) {
+      const s = await load();
+      const u = s.users.find(
+        (x) => (x.username ?? "").toLowerCase() === username.toLowerCase()
+      );
+      return u ? { ...u, points: u.points ?? 0 } : null;
+    },
+    async searchUsers(query, excludeId, limit = 8) {
+      const s = await load();
+      const q = query.toLowerCase();
+      return s.users
+        .filter((u) => u.id !== excludeId)
+        .filter((u) => {
+          const hay = `${u.username ?? ""} ${u.email} ${u.name}`.toLowerCase();
+          return hay.includes(q);
+        })
+        .slice(0, limit)
+        .map(
+          (u): UserSearch => ({
+            id: u.id,
+            name: u.name,
+            username: u.username ?? "",
+            email: u.email,
+            points: u.points ?? 0,
+          })
+        );
     },
 
     // ---- reviews ----

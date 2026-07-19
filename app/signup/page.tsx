@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function SignupPage() {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,7 +32,7 @@ export default function SignupPage() {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Sign up failed.");
@@ -67,13 +67,14 @@ export default function SignupPage() {
           </p>
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
-              <label className="label" htmlFor="name">Name</label>
+              <label className="label" htmlFor="username">Username</label>
               <input
-                id="name"
+                id="username"
                 className="input"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ada"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="ada_lovelace"
+                maxLength={20}
               />
             </div>
             <div>

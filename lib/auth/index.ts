@@ -41,7 +41,7 @@ export async function localSignIn(
 
 export async function localSignUp(
   email: string,
-  name: string,
+  username: string,
   password: string
 ): Promise<User> {
   const db = await getDb();
@@ -49,7 +49,8 @@ export async function localSignUp(
   if (existing) throw new Error("An account with that email already exists.");
   return db.createUser({
     email,
-    name,
+    name: username,
+    username,
     password_hash: hashPassword(password),
   });
 }
@@ -114,13 +115,13 @@ export async function supabaseSignIn(
 export async function supabaseSignUp(
   email: string,
   password: string,
-  name: string
+  username: string
 ): Promise<User> {
   const sb = supabaseServer();
   const { data, error } = await sb.auth.signUp({
     email,
     password,
-    options: { data: { name } },
+    options: { data: { name: username } },
   });
   if (error) throw new Error(error.message);
   if (!data.user) throw new Error("Sign up failed.");
@@ -130,7 +131,8 @@ export async function supabaseSignUp(
     profile = await db.createUser({
       id: data.user.id,
       email: data.user.email ?? email,
-      name,
+      name: username,
+      username,
     });
   }
   return profile;
@@ -162,12 +164,12 @@ export async function signIn(email: string, password: string): Promise<User> {
 
 export async function signUp(
   email: string,
-  password: string,
-  name: string
+  username: string,
+  password: string
 ): Promise<User> {
   return dataBackend() === "supabase"
-    ? supabaseSignUp(email, password, name)
-    : localSignUp(email, name, password);
+    ? supabaseSignUp(email, password, username)
+    : localSignUp(email, username, password);
 }
 
 export async function signOut() {

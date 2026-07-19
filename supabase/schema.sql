@@ -14,6 +14,9 @@ create table if not exists public.profiles (
   points integer not null default 0,
   created_at timestamptz not null default now()
 );
+-- Searchable, unique handle. Nullable so pre-username accounts don't collide;
+-- new signups always set it. Multiple NULLs are allowed by the unique index.
+alter table public.profiles add column if not exists username text unique;
 create index if not exists profiles_points_idx on public.profiles (points desc);
 create index if not exists profiles_email_idx on public.profiles (email);
 
