@@ -26,6 +26,7 @@ export function FriendsPanel({
     const q = query.trim();
     if (!q) {
       setResults([]);
+      setError(null);
       return;
     }
     const t = setTimeout(async () => {
@@ -33,7 +34,15 @@ export function FriendsPanel({
       try {
         const res = await fetch(`/api/friends?q=${encodeURIComponent(q)}`);
         const data = await res.json().catch(() => ({}));
-        setResults(data.results ?? []);
+        if (!res.ok) {
+          setError(data.error ?? "Search failed.");
+          setResults([]);
+        } else {
+          setError(null);
+          setResults(data.results ?? []);
+        }
+      } catch {
+        setError("Search request failed.");
       } finally {
         setSearching(false);
       }

@@ -1,5 +1,6 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
+import { supabaseServer } from "@/lib/supabase/server";
 import type { Database as DbInterface } from "./index";
 import type {
   Attempt,
@@ -20,25 +21,32 @@ import type {
 } from "@/lib/types";
 import { env } from "@/lib/util";
 
+let _srole: SupabaseClient | null = null;
+
 function client(): SupabaseClient {
   const url = env("NEXT_PUBLIC_SUPABASE_URL");
-  const key =
-    env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_ANON_KEY");
-  if (!url || !key) {
+  const srole = env("SUPABASE_SERVICE_ROLE_KEY");
+  // Prefer the service-role key (bypasses RLS) for all DB work.
+  if (srole && url) {
+    return (_srole ??= createClient(url, srole, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    }));
+  }
+  // No service-role key: use the session-aware client so RLS sees the current
+  // user's uid. The DB layer previously built its own anon client with no
+  // session, which made auth.uid() NULL on the server and denied every
+  // cross-user read (friend search, leaderboard) via RLS.
+  if (!url) {
     throw new Error(
-      "Supabase backend selected but NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are missing. " +
+      "Supabase backend selected but NEXT_PUBLIC_SUPABASE_URL is missing. " +
         "Set them, or run with DATA_BACKEND=local."
     );
   }
-  return createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+  return supabaseServer();
 }
 
-let _client: SupabaseClient | null = null;
-
 export function createSupabaseDb(): DbInterface {
-  const sb = () => (_client ??= client());
+  const sb = () => client();
 
   const toCourse = (r: any): Course => ({
     id: r.id,
