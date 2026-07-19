@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { rankForPoints } from "@/lib/ranks";
 import { Icon, type IconName } from "@/components/icons";
+import { RankJourney } from "@/components/RankJourney";
 
 export const dynamic = "force-dynamic";
 
@@ -54,6 +55,8 @@ export default async function LeaderboardPage() {
           </p>
         </div>
       </div>
+
+      <RankJourney points={user.points ?? 0} />
 
       {/* Board */}
       <div className="mt-6 space-y-2">
