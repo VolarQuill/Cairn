@@ -153,6 +153,13 @@ drop policy if exists "profiles: own" on public.profiles;
 create policy "profiles: own" on public.profiles
   for all using (auth.uid() = id) with check (auth.uid() = id);
 
+-- Profiles: any signed-in user may READ other profiles. Needed for username/
+-- email search, the friends scoreboard, and the leaderboard. Writes stay
+-- owner-only via "profiles: own" above.
+drop policy if exists "profiles: read" on public.profiles;
+create policy "profiles: read" on public.profiles
+  for select using (auth.uid() is not null);
+
 -- Courses (owner-only)
 drop policy if exists "courses: owner" on public.courses;
 create policy "courses: owner" on public.courses

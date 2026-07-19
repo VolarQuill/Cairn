@@ -134,6 +134,10 @@ export async function supabaseSignUp(
       name: username,
       username,
     });
+  } else if (!profile.username) {
+    // The handle_new_user trigger creates the profile without a username, so
+    // backfill it here (createUser above never runs when the row already exists).
+    profile = await db.updateUser(data.user.id, { name: username, username });
   }
   return profile;
 }
