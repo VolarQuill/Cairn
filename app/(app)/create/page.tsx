@@ -125,7 +125,7 @@ export default function CreatePage() {
                 type="file"
                 accept=".txt,.text,.md,.markdown,.mdx,.csv,.tsv,.json,.xml,.html,.htm,.yml,.yaml,.log,.tex,.rtf,.pdf,.doc,.docx,.docm,.ppt,.pptx,.pptm,.xls,.xlsx,.xlsm,.ods,.ots,.odt,.ott,.odp,.otp,.pages,.key,application/pdf,application/msword,application/vnd.ms-powerpoint,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.*,application/vnd.oasis.opendocument.*,text/*"
                 onChange={(e) => onFile(e.target.files?.[0])}
-                className="input"
+                className="block w-full cursor-pointer rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm text-bark-100 transition hover:border-amber-100/60 focus:border-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-100/40 dark:border-forest-200/40 dark:bg-forest-400 dark:text-cream-200 dark:focus:border-amber-100 dark:focus:ring-amber-100/30 dark:[color-scheme:dark] file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-amber-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-bark-300 file:transition hover:file:bg-amber-50 dark:file:bg-moss-50 dark:file:text-forest-300"
                 disabled={extracting}
               />
               <textarea
