@@ -11,7 +11,7 @@ const VARS = [
   ["SUPABASE_SERVICE_ROLE_KEY", "placeholder-service"],
   ["GEMINI_API_KEY", "sk-or-v1-your-openrouter-key"],
   ["GEMINI_BASE_URL", "https://openrouter.ai/api/v1"],
-  ["GEMINI_MODEL", "tencent/hy3:free"],
+  ["GEMINI_MODEL", "openrouter/free"],
   ["CAIRN_SECRET", SECRET],
 ];
 
